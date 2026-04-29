@@ -1,4 +1,4 @@
-[
+[ 
     "# Non-rules get passed through",
     [ true, {}, true ],
     [ false, {}, false ],

@@ -1,0 +1,57 @@
+{
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_VISUALS_WITH_AXES_MIN_150PX",
+      "name": "Report visuals with axes are at least 150px wide and tall",
+      "description": "Returns report visuals whose query state includes one or more axis roles (X, Y, Category, Series, SecondaryX, SecondaryY) but whose width or height is below 150px. Resize each returned visual so both dimensions are at least 150px.",
+      "itemType": "Report",
+      "logType": "error",
+      "test": [
+        {
+          "filter": [
+            {
+              "map": [
+                { "part": "AllVisuals" },
+                {
+                  "let": [
+                    {
+                      "matchedAxes": {
+                        "intersect": [
+                          { "keys": [{ "coalesce": [{ "var": "visual.query.queryState" }, {}] }] },
+                          { "var": "axisRoles" }
+                        ]
+                      }
+                    },
+                    {
+                      "torecord": [
+                        "name", { "var": "name" },
+                        "visualType", { "var": "visual.visualType" },
+                        "width", { "var": "position.width" },
+                        "height", { "var": "position.height" },
+                        "axisRoles", { "var": "matchedAxes" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                { "!": [{ "isnullorempty": [{ "var": "axisRoles" }] }] },
+                {
+                  "or": [
+                    { "<": [{ "var": "width" }, 150] },
+                    { "<": [{ "var": "height" }, 150] }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "axisRoles": ["X", "Y", "Category", "Series", "SecondaryX", "SecondaryY"] },
+        []
+      ]
+    }
+  ]
+}

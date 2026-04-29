@@ -63,14 +63,14 @@ A rules file is a JSON document containing a `rules` array:
 |----------|----------|---------|-------------|
 | `id` | Yes | — | Unique identifier (e.g. `"CHECK_THEME_NAME"`). Used in output and CI/CD. |
 | `name` | Yes | — | Human-readable name displayed in results. |
-| `description` | No | — | Explanation of what the rule validates and why. |
+| `description` | No | — | Explanation of what the rule validates and the returned value or ojects. *Important*: Ensure that the description is actionable so that an agent has clear but concise instructions on how to fix the issue. |
 | `test` | Yes | — | Test definition array (see Section 3). |
 | `itemType` | No | — | Fabric item type(s) to target. Use `\|` to combine (see Section 6). |
 | `part` | No | — | Part iterator selector (see Section 2). |
 | `disabled` | No | `false` | When `true`, the rule is skipped. |
 | `logType` | No | `"warning"` | Severity: `"error"`, `"warning"`. |
 | `applyPatch` | No | `false` | When `true` and a `patch` is defined, auto-fix is applied. |
-| `patch` | No | — | Auto-fix definition (see Section 7). |
+| `patch` | No | — | Deprecated - Auto-fix definition (see Section 7). |
 | `pathErrorWhenNoMatch` | No | `false` | When `true`, raises an error if the part iterator matches no files. |
 
 ## 2 — The `part` iterator
@@ -175,27 +175,28 @@ An empty `var` returns the root item:
 
 ### Data mapping (optional second element)
 
-A good use for data mapping is to bind variables to specific parts of the item definition, especially when those parts are used multiple times in the logic. This avoids redundant `part` operator calls and keeps the logic cleaner.
-
-Another use case is to bind variables to hardcoded Json objects, arrays or values such a list of allowed visual types, expected property values, or other constants that are referenced multiple times in the logic.
-
-Bind named variables using JSON Pointer paths (prefixed with `/`):
+A good use case for data mapping is to bind variables to hardcoded Json objects, arrays or values such a list of allowed visual types, expected property values, or other constants that are referenced multiple times in the logic.
 
 ```json
 {
-  "customvis": "/publicCustomVisuals"
+  "axisRoles": [
+            "X",
+            "Y",
+            "Category",
+            "Series",
+            "SecondaryX",
+            "SecondaryY"
+          ]
 }
 ```
 
-Or literal values:
+Once defined in the data mapping, these variables can be accessed in the logic with `var`:
 
 ```json
-{
-  "entities": "/entities"
-}
+{ "var": "axisRoles" }
 ```
 
-These variables are then available via `var` in the logic expression.
+*Important*: You cannot use JSONLogic operators in the data mapping.
 
 ### Expected result patterns
 
@@ -212,11 +213,11 @@ These variables are then available via `var` in the logic expression.
 
 ## 4 — Built-in JSONLogic operators
 
-All [standard JSONLogic operators](https://jsonlogic.com/operations.html) are available (comparison, logic, arithmetic, array, string, data access). The [JsonLogicExamples.json](../../JsonLogicExamples.json) file contains worked examples. Operator signatures and argument types are defined in the [JSONLogic schema](../../RuleSchemas/fab-inspector-jsonlogic.schema.json).
+All [standard JSONLogic operators](https://jsonlogic.com/operations.html) are available (comparison, logic, arithmetic, array, string, data access). The [JsonLogicExamples.json](JsonLogicExamples.json) file contains worked examples as an array of arrays each in the form of [expression, data, result]. Operator signatures and argument types are defined in the [JSONLogic schema](../../RuleSchemas/fab-inspector-jsonlogic.schema.json).
 
 ## 5 — Custom operators reference
 
-Fab Inspector adds these custom operators beyond standard JSONLogic. Grouped by category.
+Fab Inspector adds these custom operators beyond standard JSONLogic. Grouped by category. These are also defined in the [JSONLogic schema](../../RuleSchemas/fab-inspector-jsonlogic.schema.json) with signatures and argument types.
 
 ### Navigation operators
 
@@ -343,7 +344,16 @@ Joins an array of strings with a separator.
 ```
 
 #### `regexextract`
-Extracts matches from a string using a regex pattern.
+Extracts matches from a string using a regex pattern. Optionally returns a specific capture group instead of the full match.
+
+```json
+{ "regexextract": [{ "var": "sourceText" }, "\\b[A-Z]{2,}\\b"] }
+```
+
+```json
+{ "regexextract": [{ "var": "sourceText" }, "(\\w+)@(\\w+)", 2] }
+// Returns group 2 matches only
+```
 
 #### `tostring`
 Converts a JSON node to its stringified JSON representation.
@@ -378,26 +388,106 @@ Constructs a JSON record from key/value pairs.
 #### `distinct`
 Returns unique values from an array.
 
+```json
+{ "distinct": [["a", "b", "a", "c", "b"]] }
+// Result: ["a", "b", "c"]
+```
+
+```json
+{ "distinct": [["page1", "page2", "page1", "page3"]] }
+// Result: ["page1", "page2", "page3"]
+```
+
 #### `keys`
 Returns the keys of a JSON object.
+
+```json
+{ "keys": [{ "name": "Sales", "type": "barChart" }] }
+// Result: ["name", "type"]
+```
+
+```json
+{ "keys": [{ "x": 10, "y": 20, "width": 300 }] }
+// Result: ["x", "y", "width"]
+```
 
 #### `values`
 Returns the values of a JSON object.
 
+```json
+{ "values": [{ "name": "Sales", "type": "barChart" }] }
+// Result: ["Sales", "barChart"]
+```
+
+```json
+{ "values": [{ "x": 10, "y": 20, "width": 300 }] }
+// Result: [10, 20, 300]
+```
+
 #### `typeof`
 Returns the type of a JSON node as a string.
+
+```json
+{ "typeof": [{ "part": "Pages" }] }
+// Result: "array"
+```
+
+```json
+{ "typeof": [{ "var": "displayName" }] }
+// Result: "string"
+```
 
 #### `hasprop`
 Checks if a JSON object has a specific property.
 
+```json
+{ "hasprop": [{ "var": "visual" }, "objects"] }
+// Result: true
+```
+
+```json
+{ "hasprop": [{ "name": "AxisBar", "visualType": "barChart" }, "subtitle"] }
+// Result: false
+```
+
 #### `isnullorempty`
 Tests whether a value is null or empty.
 
+```json
+{ "isnullorempty": [""] }
+// Result: true
+```
+
+```json
+{ "isnullorempty": [["AxisBar"]] }
+// Result: false
+```
+
 #### `coalesce`
-Returns the first non-null value from a list of expressions.
+Returns the first non-null value from a array of expressions. There is no concept of fallback value for this operator.
+
+```json
+{ "coalesce": [null, "", "fallback"] }
+// Result: ""
+```
+
+```json
+{ "coalesce": [null, { "var": "subtitle" }, "Untitled visual"] }
+// Result: "Untitled visual"
+```
 
 #### `slice`
-Extracts a slice of an array (start/end indices).
+Extracts a slice of an array (start/end indices). Supports negative indices (counting from the end).
+
+```json
+{ "slice": [["a", "b", "c", "d"], 1, 3] }
+// Result: ["b", "c"]
+```
+
+```json
+{ "slice": [["Page 1", "Page 2", "Page 3", "Page 4"], -2] }
+// Result: ["Page 3", "Page 4"]
+```
 
 ### Variable binding
 
@@ -474,13 +564,43 @@ Counts regex matches in a file's text content. Takes a file path (or `partinfo` 
 #### `fromyamlfile`
 Reads and parses a YAML file, returning its content as JSON.
 
+```json
+{ "fromyamlfile": ["config.yaml"] }
+// Result: { "environment": "production", "debug": false, "timeout": 30 }
+```
+
+```json
+{ "fromyamlfile": ["settings.yaml"] }
+// Result: { "regions": ["us-east", "us-west"], "replicas": 3, "version": "2.1" }
+```
+
 ### Date/time operators
 
 #### `now`
 Returns the current UTC date/time.
 
+```json
+{ "now": [] }
+// Result: "2026-04-29T14:32:18.123Z"
+```
+
+```json
+{ "now": [-7, "days"] }
+// Result: "2026-04-22T14:32:18.123Z"
+```
+
 #### `datediff`
 Calculates the difference between two dates.
+
+```json
+{ "datediff": ["2026-04-01T10:00:00Z", "2026-04-29T10:00:00Z", "days"] }
+// Result: 28
+```
+
+```json
+{ "datediff": [{ "var": "createdDate" }, { "now": [] }, "hours"] }
+// Result: 168
+```
 
 ### Layout operators
 
@@ -512,10 +632,24 @@ Detects overlapping visuals on a report page. Takes an array of rectangle record
 ### REST API operators (require non-local auth)
 
 #### `daxquery`
-Executes a DAX query against a Semantic Model. Returns the query result.
+Executes a DAX query against a Semantic Model via the Power BI ExecuteQueries API. Returns the query result. Supports a simple string form (uses `{context-fabricworkspace}` and `{context-fabricitem}`) or an array form with explicit parameters.
 
 ```json
 { "daxquery": "EVALUATE VALUES('Employee Country')" }
+```
+
+Array form: `[query, workspaceId, semanticModelId, includeNulls, impersonatedUserName]`
+
+```json
+{
+  "daxquery": [
+    "EVALUATE VALUES('Product'[Category])",
+    "f45498e6-9f62-4bbb-bdb6-6d8a7e3a2703",
+    "6a496a15-d00c-4cd6-a731-a3fd79e8fb10",
+    true,
+    "analyst@contoso.com"
+  ]
+}
 ```
 
 #### `apiget`
@@ -584,7 +718,7 @@ With explicit parameters:
 Best practice: if a rule only needs a subset of the API response, combine `apiget` with `let`, `path`, `filter`, `map`, or `var` so the test compares a small deterministic projection instead of the full response payload.
 
 #### `dfsget`
-Retrieves a file from OneLake DFS endpoint. Supports template variables and path parameters.
+Retrieves a file from OneLake DFS endpoint. The URL must use HTTPS and target a host ending in `.dfs.fabric.microsoft.com`. Returns parsed JSON, or a raw string if the response is not valid JSON. Supports template variables and path parameters.
 
 ```json
 {
@@ -597,7 +731,7 @@ Retrieves a file from OneLake DFS endpoint. Supports template variables and path
 ```
 
 #### `scannerapi`
-Invokes the Power BI Scanner API to scan a workspace. Multi-step: initiates scan, polls for completion, retrieves results.
+Invokes the Power BI Scanner API to scan a workspace. Multi-step: initiates scan, polls for completion (up to 60 attempts at 5-second intervals), retrieves results. Polling can take up to 5 minutes; using `scannerapi` with `-parallel true` is not recommended as long-running polls will block worker threads.
 
 ```json
 { "scannerapi": "{context-fabricworkspace}" }
@@ -930,8 +1064,6 @@ The [RuleExamples](../../RuleExamples/) folder contains working rule files cover
 | `Example-Let-Nested-Sample.json` | Nested `let` bindings |
 | `Example-patches.json` | Patch (auto-fix) definitions |
 | `Example-NewOperators-rules.json` | Misc custom operators |
-| `Ric-Operators.md` | General-purpose operator reference with examples |
-| `FabInspector-Operators.md` | Fabric-specific (REST API) operator reference |
 
 ## 11 — Reference links
 
