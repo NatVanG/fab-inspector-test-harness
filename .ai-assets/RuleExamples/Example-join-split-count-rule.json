@@ -1,0 +1,27 @@
+{
+  "$schema": "../fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DEMO_JOIN_SPLIT_COUNT",
+      "name": "Join two arrays with pipe, split back, and count items",
+      "description": "Merges two literal arrays into one, joins all elements with a pipe separator using strjoin, splits the resulting string back into an array using strsplit, and counts the items with count. Expected: 5 items from [alpha,beta,gamma] + [delta,epsilon].",
+      "itemType": "none",
+      "test": [
+        {
+          "count": {
+            "strsplit": [
+              {
+                "strjoin": [
+                  { "merge": [ ["alpha", "beta", "gamma"], ["delta", "epsilon"] ] },
+                  "|"
+                ]
+              },
+              "|"
+            ]
+          }
+        },
+        5
+      ]
+    }
+  ]
+}

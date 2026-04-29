@@ -1,0 +1,58 @@
+{
+  "rules": [
+    {
+      "id": "CHECK_COPYJOB_JOBMODE",
+      "name": "Iterate through each CopyJob definition file and check that the JobMode is Batch.",
+      "itemType": "CopyJob",
+      "part": "copyjob-content.json",
+      "test": [
+        {
+          "var": "properties.jobMode"
+        },
+        "Batch" 
+      ]
+    },
+    {
+      "id": "CHECK_COPYJOB_JOBMODE2",
+      "name": "Check that the JobMode is Batch in the first CopyJob definition file.",
+      "itemType": "CopyJob",
+      "test": [
+        {
+          "query": [
+            {
+              "part": "copyjob-content.json"
+            },
+            {
+              "var": "0.properties.jobMode"
+            }
+          ]
+        },
+        "Batch"
+      ]
+    },
+    {
+      "id": "CHECK_COPYJOB_JOBMODE3",
+      "name": "Check that all CopyJob definitions have JobMode set to Batch.",
+      "itemType": "CopyJob",
+      "disabled": true,
+      "test": [
+        {
+          "all": [
+            {
+              "query": [
+                {
+                  "part": "copyjob-content.json"
+                },
+                {
+                  "path": "$.*.properties.jobMode"
+                }
+              ]
+            },
+            "Batch"
+          ]
+        },
+        true
+      ]
+    }
+  ]
+}

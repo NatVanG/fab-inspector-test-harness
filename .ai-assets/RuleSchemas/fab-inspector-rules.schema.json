@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NatVanG/fab-inspector/blob/main/fab-inspector-rules.schema.json",
+  "title": "Fab Inspector Rules File",
+  "description": "Schema for Fab Inspector rule files. Each file contains a 'rules' array of inspection rule objects that validate Fabric items using JSONLogic expressions.",
+  "type": "object",
+  "required": ["rules"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema reference for IDE validation."
+    },
+    "rules": {
+      "type": "array",
+      "description": "Array of inspection rules.",
+      "items": { "$ref": "#/$defs/rule" }
+    }
+  },
+
+  "$defs": {
+
+    "rule": {
+      "type": "object",
+      "description": "A single Fab Inspector inspection rule.",
+      "required": ["id", "name", "test"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the rule (e.g. \"CHECK_THEME_NAME\"). Used for referencing in output and CI/CD."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name displayed in results, console output, and reports."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed explanation of what the rule validates and why."
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the rule is skipped during execution."
+        },
+        "logType": {
+          "type": "string",
+          "enum": ["error", "warning", "info"],
+          "default": "warning",
+          "description": "Severity level for rule violations. Default: \"warning\"."
+        },
+        "itemType": {
+          "type": "string",
+          "description": "Fabric item type(s) this rule targets. Use '|' to combine multiple types (e.g. \"DataPipeline|VariableLibrary\"). Use \"*\" for cross-item rules, \"none\" for API-only rules.",
+          "examples": [
+            "Report",
+            "SemanticModel",
+            "CopyJob",
+            "DataPipeline",
+            "Lakehouse",
+            "Notebook",
+            "Environment",
+            "VariableLibrary",
+            "Dataflow",
+            "SQLDatabase",
+            "Warehouse",
+            "none",
+            "*",
+            "DataPipeline|VariableLibrary"
+          ]
+        },
+        "part": {
+          "type": "string",
+          "description": "Part iterator selector. For Report itemType: a reserved part name (Report, ReportExtensions, Pages, PagesHeader, AllPages, Visuals, AllVisuals, MobileVisuals, AllMobileVisuals, Bookmarks, BookmarksHeader, AllBookmarks, Files). For other item types: a regex pattern matching file paths (folder separators normalised to ':').",
+          "examples": [
+            "Report",
+            "Pages",
+            "Visuals",
+            "AllVisuals",
+            "AllPages",
+            "Bookmarks",
+            "ReportExtensions",
+            "Files",
+            "copyjob-content.json",
+            "pipeline-content.json",
+            "variables.json",
+            "settings.json",
+            "lakehouse.metadata.json",
+            ".pq$",
+            ".sql"
+          ]
+        },
+        "test": {
+          "description": "Test definition. A 2-element array [logic, expectedResult] or a 3-element array [logic, dataMapping, expectedResult]. The logic is a JSONLogic expression. The optional dataMapping binds named variables via JSON Pointer paths (prefixed with '/'). The expectedResult is the value the logic must produce for the rule to pass.",
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "2-element test: [logic, expectedResult] — no data mapping.",
+              "prefixItems": [
+                { "$ref": "fab-inspector-jsonlogic.schema.json" },
+                { "$ref": "#/$defs/expectedResult" }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            },
+            {
+              "type": "array",
+              "description": "3-element test: [logic, dataMapping, expectedResult] — with data mapping.",
+              "prefixItems": [
+                { "$ref": "fab-inspector-jsonlogic.schema.json" },
+                { "$ref": "#/$defs/dataMapping" },
+                { "$ref": "#/$defs/expectedResult" }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            }
+          ]
+        },
+        "applyPatch": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true and a 'patch' is defined, the patch will be applied automatically to fix failing items."
+        },
+        "patch": {
+          "description": "Auto-fix patch definition. A 2-element array: [targetPart, patchOperations]. Only Report parts are currently supported.",
+          "type": "array",
+          "prefixItems": [
+            { "$ref": "#/$defs/patchTarget" },
+            {
+              "type": "array",
+              "description": "Array of RFC 6902 JSON Patch operations.",
+              "items": { "$ref": "#/$defs/jsonPatchOperation" },
+              "minItems": 1
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "pathErrorWhenNoMatch": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, raises an error if the part iterator doesn't match any files. Useful for validating expected item structure."
+        }
+      }
+    },
+
+    "dataMapping": {
+      "type": "object",
+      "description": "Data mapping object. Keys are variable names accessible via {\"var\": \"name\"} in the logic expression. Values are JSON Pointer paths (prefixed with '/') into the current part content, or literal values.",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          { "type": "number" },
+          { "type": "boolean" },
+          { "type": "null" },
+          { "type": "array" },
+          { "type": "object" }
+        ]
+      }
+    },
+
+    "expectedResult": {
+      "description": "The expected result of the logic expression. The rule passes when the logic output matches this value. Common patterns: true/false for boolean assertions, [] for 'no violations found' (filter-based rules), or a specific value for exact match.",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "integer" },
+        { "type": "boolean" },
+        { "type": "null" },
+        { "type": "array" },
+        { "type": "object" }
+      ]
+    },
+
+    "patchTarget": {
+      "type": "string",
+      "description": "The Report part to apply the patch against.",
+      "enum": [
+        "Report",
+        "ReportExtensions",
+        "Pages",
+        "PagesHeader",
+        "AllPages",
+        "Visuals",
+        "AllVisuals",
+        "MobileVisuals",
+        "AllMobileVisuals",
+        "Bookmarks",
+        "BookmarksHeader",
+        "AllBookmarks"
+      ]
+    },
+
+    "jsonPatchOperation": {
+      "type": "object",
+      "description": "A single RFC 6902 JSON Patch operation.",
+      "required": ["op"],
+      "oneOf": [
+        {
+          "description": "Add a value at the specified path.",
+          "properties": {
+            "op": { "const": "add" },
+            "path": { "type": "string", "description": "JSON Pointer path where the value will be added." },
+            "value": { "description": "The value to add." }
+          },
+          "required": ["op", "path", "value"],
+          "additionalProperties": false
+        },
+        {
+          "description": "Remove the value at the specified path.",
+          "properties": {
+            "op": { "const": "remove" },
+            "path": { "type": "string", "description": "JSON Pointer path of the value to remove." }
+          },
+          "required": ["op", "path"],
+          "additionalProperties": false
+        },
+        {
+          "description": "Replace the value at the specified path.",
+          "properties": {
+            "op": { "const": "replace" },
+            "path": { "type": "string", "description": "JSON Pointer path of the value to replace." },
+            "value": { "description": "The new value." }
+          },
+          "required": ["op", "path", "value"],
+          "additionalProperties": false
+        },
+        {
+          "description": "Move a value from one path to another.",
+          "properties": {
+            "op": { "const": "move" },
+            "from": { "type": "string", "description": "JSON Pointer path of the source value." },
+            "path": { "type": "string", "description": "JSON Pointer path of the destination." }
+          },
+          "required": ["op", "from", "path"],
+          "additionalProperties": false
+        },
+        {
+          "description": "Copy a value from one path to another.",
+          "properties": {
+            "op": { "const": "copy" },
+            "from": { "type": "string", "description": "JSON Pointer path of the source value." },
+            "path": { "type": "string", "description": "JSON Pointer path of the destination." }
+          },
+          "required": ["op", "from", "path"],
+          "additionalProperties": false
+        },
+        {
+          "description": "Test (assert) that a value at the specified path equals the given value.",
+          "properties": {
+            "op": { "const": "test" },
+            "path": { "type": "string", "description": "JSON Pointer path to test." },
+            "value": { "description": "The expected value." }
+          },
+          "required": ["op", "path", "value"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

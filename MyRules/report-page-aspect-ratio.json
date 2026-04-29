@@ -1,0 +1,85 @@
+{
+  "rules": [
+    {
+      "id": "REPORT_PAGE_ASPECT_RATIO_16_9",
+      "name": "Report pages aspect ratio 16:9 validation",
+      "description": "Identifies Power BI report pages with aspect ratios that deviate from 16:9. Checks only visible, non-Tooltip pages.",
+      "itemType": "Report",
+      "part": "Pages",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                { "part": "" },
+                {
+                  "and": [
+                    {
+                      "or": [
+                        { "!": [{ "hasprop": [{ "var": "" }, "hidden"] }] },
+                        { "==": [{ "var": "hidden" }, false] }
+                      ]
+                    },
+                    {
+                      "!=": [{ "var": "displayOption" }, "Tooltip"]
+                    },
+                    {
+                      "!": [
+                        {
+                          "or": [
+                            { "isnullorempty": [{ "var": "width" }] },
+                            { "isnullorempty": [{ "var": "height" }] }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "!=": [
+                        {
+                          "let": [
+                            {
+                              "aspectRatio": {
+                                "/": [
+                                  { "var": "width" },
+                                  { "var": "height" }
+                                ]
+                              },
+                              "targetRatio": 1.7777777777777777
+                            },
+                            {
+                              ">": [
+                                {
+                                  "map": [
+                                    [
+                                      {
+                                        "-": [
+                                          { "var": "aspectRatio" },
+                                          { "var": "targetRatio" }
+                                        ]
+                                      }
+                                    ],
+                                    {
+                                      "var": "0"
+                                    }
+                                  ]
+                                },
+                                0.01
+                              ]
+                            }
+                          ]
+                        },
+                        false
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            { "var": "displayName" }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

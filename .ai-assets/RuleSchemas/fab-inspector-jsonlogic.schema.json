@@ -1,0 +1,494 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NatVanG/fab-inspector/blob/main/fab-inspector-jsonlogic.schema.json",
+  "title": "Fab Inspector Extended JSONLogic Rule",
+  "description": "Schema for JSONLogic expressions used in Fab Inspector, covering 34 native operators, 5 FabInspector.Operators, and 31 Ric.Operators.",
+  "oneOf": [
+    { "$ref": "#/$defs/literal" },
+    { "$ref": "#/$defs/ruleObject" }
+  ],
+
+  "$defs": {
+
+    "literal": {
+      "description": "A literal value passed through unchanged (not a rule object).",
+      "type": ["string", "number", "integer", "boolean", "null", "array"]
+    },
+
+    "rule": {
+      "description": "Any valid JSONLogic expression: a literal or a single-operator rule object.",
+      "oneOf": [
+        { "$ref": "#/$defs/literal" },
+        { "$ref": "#/$defs/ruleObject" }
+      ]
+    },
+
+    "ruleObject": {
+      "type": "object",
+      "description": "A JSONLogic rule object with exactly one operator key.",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+
+        "==": {
+          "description": "Loose equality. Compares two values with type coercion (e.g. 1 == \"1\" is true).",
+          "$ref": "#/$defs/args_binary"
+        },
+        "===": {
+          "description": "Strict equality. Compares two values without type coercion (e.g. 1 === \"1\" is false).",
+          "$ref": "#/$defs/args_binary"
+        },
+        "!=": {
+          "description": "Loose inequality. True if two values are not loosely equal.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "!==": {
+          "description": "Strict inequality. True if two values are not strictly equal.",
+          "$ref": "#/$defs/args_binary"
+        },
+        ">": {
+          "description": "Greater than. Compares two values with numeric coercion.",
+          "$ref": "#/$defs/args_binary"
+        },
+        ">=": {
+          "description": "Greater than or equal. Compares two values with numeric coercion.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "<": {
+          "description": "Less than. With 2 args: a < b. With 3 args (between): a < b < c.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+        "<=": {
+          "description": "Less than or equal. With 2 args: a <= b. With 3 args (between): a <= b <= c.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+
+        "!": {
+          "description": "Logical NOT. Negates a single value. Accepts bare value or single-element array.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "!!": {
+          "description": "Double negation (cast to boolean). Returns true for truthy values, false for falsy.",
+          "$ref": "#/$defs/args_unary"
+        },
+
+        "and": {
+          "description": "Logical AND. Returns the first falsy value or the last value if all are truthy. Short-circuits.",
+          "$ref": "#/$defs/args_variadic"
+        },
+        "or": {
+          "description": "Logical OR. Returns the first truthy value or the last value if all are falsy. Short-circuits.",
+          "$ref": "#/$defs/args_variadic"
+        },
+
+        "?:": {
+          "description": "Ternary conditional. Args: [condition, consequent, alternate].",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "if": {
+          "description": "If/then/elseif/then/.../else. Variadic: [cond1, then1, cond2, then2, ..., else]. Supports chained conditions.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 0
+        },
+
+        "in": {
+          "description": "Membership test. Checks if the first arg is contained in the second (string substring or array membership).",
+          "$ref": "#/$defs/args_binary"
+        },
+
+        "cat": {
+          "description": "String concatenation. Joins all arguments into a single string. Accepts bare value or array.",
+          "$ref": "#/$defs/args_bare_or_array"
+        },
+        "substr": {
+          "description": "Substring extraction. Args: [string, start] or [string, start, length]. Negative indices count from end.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+
+        "+": {
+          "description": "Addition / numeric cast. Sums all arguments. A single argument is cast to number.",
+          "$ref": "#/$defs/args_bare_or_array"
+        },
+        "-": {
+          "description": "Subtraction / negation. With 2 args: a - b. With 1 arg: -a (negation).",
+          "$ref": "#/$defs/args_unary_or_binary"
+        },
+        "*": {
+          "description": "Multiplication. Multiplies all arguments together.",
+          "$ref": "#/$defs/args_bare_or_array"
+        },
+        "/": {
+          "description": "Division. Divides the first argument by the second.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "%": {
+          "description": "Modulo. Returns the remainder of dividing the first argument by the second.",
+          "$ref": "#/$defs/args_binary"
+        },
+
+        "min": {
+          "description": "Minimum. Returns the smallest value from the arguments.",
+          "$ref": "#/$defs/args_variadic"
+        },
+        "max": {
+          "description": "Maximum. Returns the largest value from the arguments.",
+          "$ref": "#/$defs/args_variadic"
+        },
+
+        "merge": {
+          "description": "Merge arrays. Flattens arguments into a single array. Non-array arguments are wrapped.",
+          "$ref": "#/$defs/args_bare_or_array"
+        },
+
+        "var": {
+          "description": "Data access. Retrieves a value from the data object by dot-notation path. Args: path (string/number/null) or [path, default].",
+          "oneOf": [
+            { "type": ["string", "number", "null"] },
+            {
+              "type": "array",
+              "items": {},
+              "minItems": 0,
+              "maxItems": 2
+            }
+          ]
+        },
+        "missing": {
+          "description": "Returns an array of keys that are missing from the data object.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" }
+            }
+          ]
+        },
+        "missing_some": {
+          "description": "Returns missing keys only if fewer than the minimum required are present. Args: [minimum_required, [keys...]].",
+          "type": "array",
+          "prefixItems": [
+            { "type": "integer", "minimum": 0 },
+            { "type": "array", "items": { "type": "string" } }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+
+        "filter": {
+          "description": "Array filter. Returns elements where the logic evaluates truthy. Args: [dataArray, logicRule]. Use {\"var\":\"\"} for current element.",
+          "$ref": "#/$defs/args_array_op"
+        },
+        "map": {
+          "description": "Array map. Transforms each element using the logic rule. Args: [dataArray, logicRule]. Use {\"var\":\"\"} for current element.",
+          "$ref": "#/$defs/args_array_op"
+        },
+        "all": {
+          "description": "Array all. True if every element satisfies the logic rule. Returns false for empty arrays.",
+          "$ref": "#/$defs/args_array_op"
+        },
+        "none": {
+          "description": "Array none. True if no element satisfies the logic rule. Returns true for empty arrays.",
+          "$ref": "#/$defs/args_array_op"
+        },
+        "some": {
+          "description": "Array some. True if at least one element satisfies the logic rule. Returns false for empty arrays.",
+          "$ref": "#/$defs/args_array_op"
+        },
+        "reduce": {
+          "description": "Array reduce. Accumulates a value over the array. Args: [dataArray, logicRule, initialValue]. Use {\"var\":\"current\"} and {\"var\":\"accumulator\"} inside logic.",
+          "type": "array",
+          "prefixItems": [
+            { "$ref": "#/$defs/rule" },
+            { "$ref": "#/$defs/rule" },
+            { "$ref": "#/$defs/rule" }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+
+        "apiget": {
+          "description": "[FabInspector] HTTP GET against Power BI or Fabric REST APIs. Args: [urlTemplate, ...params]. URL placeholders like {paramName} are substituted by positional parameters.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 1
+            }
+          ]
+        },
+        "daxquery": {
+          "description": "[FabInspector] Execute a DAX query against a Fabric Semantic Model. Args: [daxQuery, workspaceId?, semanticModelId?, includeNulls?, impersonatedUserName?].",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 1,
+              "maxItems": 5
+            }
+          ]
+        },
+        "dfsget": {
+          "description": "[FabInspector] HTTP GET against OneLake DFS endpoints. Args: [dfsUrlTemplate, ...params]. URL must be HTTPS to *.dfs.fabric.microsoft.com.",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 1
+            }
+          ]
+        },
+        "rectoverlap": {
+          "description": "[FabInspector] Detect overlapping rectangles. Args: [rectanglesArray] or [rectanglesArray, margin]. Each rectangle: {name, x, y, width, height}. Returns names of overlapping rectangles.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "scannerapi": {
+          "description": "[FabInspector] Invoke the Power BI Admin Scanner API. Args: [workspaceIds, lineage?, datasourceDetails?, datasetSchema?, datasetExpressions?, getArtifactUsers?].",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 1,
+              "maxItems": 6
+            }
+          ]
+        },
+
+        "coalesce": {
+          "description": "[Ric] Returns the first non-null value from the arguments. Unlike 'or', only skips null — not other falsy values.",
+          "$ref": "#/$defs/args_variadic"
+        },
+        "count": {
+          "description": "[Ric] Counts the number of items in an array. Returns an integer.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "datediff": {
+          "description": "[Ric] Computes the difference between two ISO 8601 dates. Args: [date1, date2] or [date1, date2, unit]. Unit: seconds|minutes|hours|days (default: days). Result is date2 - date1.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+        "distinct": {
+          "description": "[Ric] Removes duplicate values from an array using deep equality. Returns deduplicated array.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "drillvar": {
+          "description": "[Ric] Navigate to a variable using a path string with '>' separator. Args: [path] or [path, defaultValue].",
+          "$ref": "#/$defs/args_unary_or_binary"
+        },
+        "filesize": {
+          "description": "[Ric] Returns the file or folder size in bytes for the given path. Works with local and remote file systems.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "filetextsearchcount": {
+          "description": "[Ric] Reads a file and counts regex pattern matches. Args: [filePath, regexPattern]. Returns integer count.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "fromyamlfile": {
+          "description": "[Ric] Reads and parses a YAML file, converting it to a JSON object. Args: [filePath].",
+          "$ref": "#/$defs/args_unary"
+        },
+        "hasprop": {
+          "description": "[Ric] Checks if a JSON object contains a property with the given key. Args: [object, key]. Returns boolean. Distinguishes null value from missing property.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "isnullorempty": {
+          "description": "[Ric] Returns true if the value is null, empty string, 0, or empty array.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "keys": {
+          "description": "[Ric] Returns an array of property names from a JSON object.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "let": {
+          "description": "[Ric] Variable bindings. Args: [bindingsObject, bodyRule]. Evaluates binding expressions and makes them available via {\"var\":\"name\"} in the body. Useful for caching expensive operations.",
+          "type": "array",
+          "prefixItems": [
+            { "$ref": "#/$defs/letBindings" },
+            { "$ref": "#/$defs/rule" }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "now": {
+          "description": "[Ric] Returns the current UTC time as an ISO 8601 string. Args: [] or [offset] or [offset, unit]. Unit: seconds|minutes|hours|days|months|years.",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 0,
+              "maxItems": 2
+            },
+            { "type": ["string", "number", "null"] }
+          ]
+        },
+        "part": {
+          "description": "[Ric] Queries part information for a given file/folder path. Args: [partName]. Returns part content from the current inspection context.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "partinfo": {
+          "description": "[Ric] Queries advanced part information including file size and type. Args: [partPath].",
+          "$ref": "#/$defs/args_unary"
+        },
+        "path": {
+          "description": "[Ric] Evaluates a JSONPath expression (RFC 9535) against the current data. Args: [jsonPath] or [jsonPath, defaultValue]. Returns array of matching values.",
+          "$ref": "#/$defs/args_unary_or_binary"
+        },
+        "query": {
+          "description": "[Ric] Applies a JSONLogic rule using the first argument as contextData. Args: [inputData, logicRule]. Useful for transforming or querying nested data.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "regexextract": {
+          "description": "[Ric] Extracts regex matches from a string. Args: [string, pattern] or [string, pattern, captureGroupIndex]. Returns array of matches.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+
+        "diff": {
+          "description": "[Ric] Set difference. Returns items in the first array that are not in the second. Uses deep equality.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "equalsets": {
+          "description": "[Ric] Set equality test. Returns empty array if sets are equal, populated array otherwise. Uses deep equality, order-independent.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "intersect": {
+          "description": "[Ric] Set intersection. Returns items present in both arrays. Uses deep equality.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "symdiff": {
+          "description": "[Ric] Symmetric difference. Returns items in either array but not both. Uses deep equality.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "union": {
+          "description": "[Ric] Set union. Combines both arrays, removing duplicates. Uses deep equality.",
+          "$ref": "#/$defs/args_binary"
+        },
+
+        "slice": {
+          "description": "[Ric] Extracts a sub-array. Args: [array, start] or [array, start, end]. Follows JavaScript Array.prototype.slice() semantics; negative indices count from end.",
+          "$ref": "#/$defs/args_binary_or_ternary"
+        },
+
+        "strcontains": {
+          "description": "[Ric] Counts regex pattern matches in a string. Args: [searchString, regexPattern]. Returns integer count.",
+          "$ref": "#/$defs/args_binary"
+        },
+        "strjoin": {
+          "description": "[Ric] Joins array elements into a single string with a separator. Args: [array, separator].",
+          "$ref": "#/$defs/args_binary"
+        },
+        "strsplit": {
+          "description": "[Ric] Splits a string by a delimiter. Args: [string, delimiter]. Returns array of parts.",
+          "$ref": "#/$defs/args_binary"
+        },
+
+        "torecord": {
+          "description": "[Ric] Constructs a JSON object from alternating key-value pairs. Args: [key1, value1, key2, value2, ...]. Requires an even number of arguments.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 2
+        },
+        "tostring": {
+          "description": "[Ric] Converts a value to its JSON string representation.",
+          "$ref": "#/$defs/args_unary"
+        },
+        "typeof": {
+          "description": "[Ric] Returns the JSON type of a value as a string: \"string\", \"number\", \"boolean\", \"array\", \"object\", or \"null\".",
+          "$ref": "#/$defs/args_unary"
+        },
+        "values": {
+          "description": "[Ric] Returns an array of property values from a JSON object.",
+          "$ref": "#/$defs/args_unary"
+        }
+      }
+    },
+
+    "letBindings": {
+      "type": "object",
+      "description": "An object mapping variable names to JSONLogic expressions. Each key becomes available via {\"var\": \"name\"} in the body.",
+      "additionalProperties": { "$ref": "#/$defs/rule" }
+    },
+
+    "args_unary": {
+      "description": "A single argument: bare value or single-element array.",
+      "anyOf": [
+        { "$ref": "#/$defs/rule" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 1,
+          "maxItems": 1
+        }
+      ]
+    },
+
+    "args_binary": {
+      "description": "Exactly two arguments in an array.",
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/rule" },
+        { "$ref": "#/$defs/rule" }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+
+    "args_binary_or_ternary": {
+      "description": "Two or three arguments in an array.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/rule" },
+      "minItems": 2,
+      "maxItems": 3
+    },
+
+    "args_unary_or_binary": {
+      "description": "One or two arguments: bare value, or array of 1-2 elements.",
+      "anyOf": [
+        { "$ref": "#/$defs/rule" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "minItems": 1,
+          "maxItems": 2
+        }
+      ]
+    },
+
+    "args_variadic": {
+      "description": "One or more arguments in an array.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/rule" },
+      "minItems": 1
+    },
+
+    "args_array_op": {
+      "description": "Array operation arguments: [dataArray, logicRule].",
+      "type": "array",
+      "prefixItems": [
+        { "$ref": "#/$defs/rule" },
+        { "$ref": "#/$defs/rule" }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+
+    "args_bare_or_array": {
+      "description": "A single value or an array of values (for cat, merge, +, *, etc.).",
+      "anyOf": [
+        { "$ref": "#/$defs/rule" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" }
+        }
+      ]
+    }
+  }
+}

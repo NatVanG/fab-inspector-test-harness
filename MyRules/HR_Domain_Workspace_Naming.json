@@ -1,0 +1,57 @@
+{
+  "rules": [
+    {
+      "id": "HR_DOMAIN_WORKSPACE_PREFIX",
+      "name": "HR domain workspaces must be prefixed with HR_",
+      "description": "Validates that all workspaces assigned to the HR domain have display names starting with 'HR_'. Returns a list of HR domain workspaces that do not follow the naming convention.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces"
+                ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    {
+                      "query": [
+                        {
+                          "var": "response"
+                        },
+                        {
+                          "path": "$.value[*][?(@.domain == 'HR')]"
+                        }
+                      ]
+                    },
+                    {
+                      "!": [
+                        {
+                          "strcontains": [
+                            {
+                              "var": "displayName"
+                            },
+                            "^HR_"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "var": "displayName"
+                }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}
