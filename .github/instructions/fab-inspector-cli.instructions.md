@@ -2,12 +2,6 @@
 description: Fab Inspector CLI invocation, parameters, authentication, output formats, and CI/CD setup.
 ---
 
-When helping with Fab Inspector CLI usage, always read and follow:
-.ai-assets/skills/fab-inspector-cli/SKILL.md
-
-Focus on:
-- correct parameter combinations
-- authentication requirements
-- output format behavior
-- CI/CD-safe command patterns
-- secret-safe guidance (never expose tokens/secrets)
+- Never log or output tokens, passwords, client secrets, or federated tokens.
+- Use placeholder values when suggesting commands that include secrets.
+- Advise rotating credentials if a user shares sensitive strings.

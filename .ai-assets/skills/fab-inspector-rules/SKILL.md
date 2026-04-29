@@ -8,33 +8,13 @@ This skill provides comprehensive guidance for writing Fab Inspector rules — d
 
 ## 0 — Fabric MCP grounding
 
-Before creating, editing, or correcting Fab Inspector rules for Fabric items or Fabric REST APIs:
+Use the local Fabric MCP server tools to verify rule accuracy:
 
-- Ensure the local Fabric MCP server is installed and available in the current environment.
-- Consult the local Fabric MCP `docs_item_definitions` tool when identifying valid definition parts, payload shapes, JSON Pointer paths, and example property locations.
-- Consult the local Fabric MCP `docs_platform_api_spec` tool when the rule targets core Fabric platform APIs.
-- Consult the local Fabric MCP `docs_workload_api_spec` tool when the rule targets workload-specific Fabric APIs.
-- Use these local docs sources as needed to keep rule parts, JSON paths, and API endpoints aligned with current official Fabric contracts.
+- `docs_item_definitions` — validate `itemType`, `part`, `var`, JSON Pointer paths, and payload shapes.
+- `docs_platform_api_spec` — verify core Fabric platform API endpoints for `apiget` rules only.
+- `docs_workload_api_spec` — verify workload-specific API endpoints and payloads for `apiget` rules only.
 
-Installation baseline (required):
-
-Use the official instructions from:
-https://github.com/microsoft/mcp/blob/main/servers/Fabric.Mcp.Server/README.md#installation
-
-For VS Code (recommended), ensure all of the following are true before authoring rules:
-
-1. The `GitHub Copilot Chat` extension is installed.
-2. The `Fabric MCP Server` extension is installed.
-3. In Copilot Chat Agent mode, refresh the tools list and confirm Fabric MCP tools are present.
-4. Validate with a simple Fabric MCP question (for example: "What Fabric workload types are available?") to confirm the server is active.
-
-If Fabric MCP tools are unavailable, stop rule authoring work and complete installation/troubleshooting first.
-
-Practical usage:
-
-- Use `docs_item_definitions` for `itemType`, `part`, `var`, JSON Pointer, path accuracy.
-- Use `docs_platform_api_spec` for `apiget` rules against shared/core Fabric endpoints.
-- Use `docs_workload_api_spec` for `apiget` rules against workload-specific endpoints and payloads.
+If Fabric MCP tools are unavailable, install via [the official instructions](https://github.com/microsoft/mcp/blob/main/servers/Fabric.Mcp.Server/README.md#installation) before authoring rules.
 
 ## 1 — Rules file structure
 
@@ -53,7 +33,7 @@ A rules file is a JSON document containing a `rules` array:
 
 ```json
 {
-  "$schema": "./.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "SIMPLEST_RULE",
@@ -76,6 +56,22 @@ A rules file is a JSON document containing a `rules` array:
   ]
 }
 ```
+
+### Rule properties
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `id` | Yes | — | Unique identifier (e.g. `"CHECK_THEME_NAME"`). Used in output and CI/CD. |
+| `name` | Yes | — | Human-readable name displayed in results. |
+| `description` | No | — | Explanation of what the rule validates and why. |
+| `test` | Yes | — | Test definition array (see Section 3). |
+| `itemType` | No | — | Fabric item type(s) to target. Use `\|` to combine (see Section 6). |
+| `part` | No | — | Part iterator selector (see Section 2). |
+| `disabled` | No | `false` | When `true`, the rule is skipped. |
+| `logType` | No | `"warning"` | Severity: `"error"`, `"warning"`. |
+| `applyPatch` | No | `false` | When `true` and a `patch` is defined, auto-fix is applied. |
+| `patch` | No | — | Auto-fix definition (see Section 7). |
+| `pathErrorWhenNoMatch` | No | `false` | When `true`, raises an error if the part iterator matches no files. |
 
 ## 2 — The `part` iterator
 
@@ -216,19 +212,7 @@ These variables are then available via `var` in the logic expression.
 
 ## 4 — Built-in JSONLogic operators
 
-Fab Inspector uses JSONLogic as its expression language. All [standard JSONLogic operators](https://jsonlogic.com/operations.html) are available:
-
-| Category | Operators |
-|----------|-----------|
-| Comparison | `==`, `===`, `!=`, `!==`, `<`, `<=`, `>`, `>=` |
-| Logic | `if`, `and`, `or`, `!`, `!!`, `not` |
-| Arithmetic | `+`, `-`, `*`, `/`, `%`, `min`, `max` |
-| Array | `map`, `filter`, `reduce`, `all`, `some`, `none`, `merge`, `in` |
-| String | `cat`, `substr` |
-| Data | `var`, `missing`, `missing_some` |
-| Other | `log` |
-
-The [JsonLogicExamples.json](../../JsonLogicExamples.json) file contains examples of JSONLogic expressions as a JSON array with data mappings (optional) and their expected results.
+All [standard JSONLogic operators](https://jsonlogic.com/operations.html) are available (comparison, logic, arithmetic, array, string, data access). The [JsonLogicExamples.json](../../JsonLogicExamples.json) file contains worked examples. Operator signatures and argument types are defined in the [JSONLogic schema](../../RuleSchemas/fab-inspector-jsonlogic.schema.json).
 
 ## 5 — Custom operators reference
 
@@ -282,7 +266,7 @@ JSONPath expression to query the current context. Uses [JsonPath.Net](https://do
 { "path": "$.*.properties.jobMode" }
 ```
 
-To apply a JSONPath to a specific data node use in conjunction with the `query` operator:
+*Impportant* To apply a JSONPath to a specific data node use in conjunction with the `query` operator:
 
 ```json
 { "query": [ {  "var": "response" }, { "path": "$.value[*].displayName" } ] }
@@ -597,16 +581,6 @@ With explicit parameters:
 }
 ```
 
-Additional examples:
-
-```json
-{ "apiget": ["https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/onelake/settings"] }
-```
-
-```json
-{ "apiget": "https://api.powerbi.com/v1.0/myorg/groups/{context-fabricworkspace}/reports" }
-```
-
 Best practice: if a rule only needs a subset of the API response, combine `apiget` with `let`, `path`, `filter`, `map`, or `var` so the test compares a small deterministic projection instead of the full response payload.
 
 #### `dfsget`
@@ -671,22 +645,11 @@ Rules can optionally define a patch to auto-fix failing items. Currently **only 
 ```json
 "patch": [
   "<target-part>",
-  [ /* RFC 6902 JSON Patch operations */ ]
+  [ /* RFC 6902 JSON Patch operations (add, remove, replace, move, copy, test) */ ]
 ]
 ```
 
-Target part is one of: `Report`, `ReportExtensions`, `Pages`, `PagesHeader`, `AllPages`, `Visuals`, `AllVisuals`, `MobileVisuals`, `AllMobileVisuals`, `Bookmarks`, `BookmarksHeader`, `AllBookmarks`.
-
-### Patch operations (RFC 6902)
-
-| Operation | Description |
-|-----------|-------------|
-| `add` | Add a value at a JSON Pointer path |
-| `remove` | Remove a value at a path |
-| `replace` | Replace a value at a path |
-| `move` | Move a value from one path to another |
-| `copy` | Copy a value from one path to another |
-| `test` | Assert a value at a path |
+Target part must be one of the reserved Report part names from Section 2.
 
 ### Example: fix missing axis titles
 
@@ -947,9 +910,28 @@ Call a Fabric REST API:
 | Check file sizes | `filesize` + `partinfo` |
 | Search file contents | `filetextsearchcount` + `partinfo` + regex |
 
-## 10 - Additional examples
+## 10 — Rule examples
 
-- See the `DocsExamples/` folder in this repository for a variety of example rules covering different item types, operators, and patterns.
+The [RuleExamples](../../RuleExamples/) folder contains working rule files covering a range of item types, operators, and patterns. When creating or editing rules, consult these for real-world usage:
+
+| File | Covers |
+|------|--------|
+| `Example-pbir-rules.json` | Report rules — pages, visuals, bookmarks, themes |
+| `Example-CopyJob-Rules.json` | CopyJob item rules |
+| `Example-lakehouse-workspace-naming-rules.json` | Lakehouse + workspace naming conventions |
+| `Example-FabricCrossItem-Rules.json` | Cross-item (`*`) rules |
+| `Sample-VariableLibrary-rules.json` | VariableLibrary + DataPipeline cross-item |
+| `Example-fabric-apiget-rule.json` | `apiget` with Fabric REST API |
+| `Example-pbi-apiget-rule.json` | `apiget` with Power BI REST API |
+| `Example-daxquery-rule.json` | `daxquery` operator |
+| `Example-scannerapi-rules.json` | `scannerapi` operator |
+| `Example-dfsget-rule.json` | `dfsget` operator |
+| `Example-let-rule.json` | `let` variable binding |
+| `Example-Let-Nested-Sample.json` | Nested `let` bindings |
+| `Example-patches.json` | Patch (auto-fix) definitions |
+| `Example-NewOperators-rules.json` | Misc custom operators |
+| `Ric-Operators.md` | General-purpose operator reference with examples |
+| `FabInspector-Operators.md` | Fabric-specific (REST API) operator reference |
 
 ## 11 — Reference links
 
@@ -960,7 +942,4 @@ Call a Fabric REST API:
 - **JSON Pointer specification**: https://datatracker.ietf.org/doc/html/rfc6901
 - **JSONPath.Net**: https://docs.json-everything.net/path/basics/
 - **JSON Patch (RFC 6902)**: https://tools.ietf.org/html/rfc6902
-- **Example rules**: `DocsExamples/` folder in this repository
-- **Base rules**: `Rules/Base-rules.json`
-- **Operators documentation**: `DocsExamples/FabInspector-Operators.md` and `DocsExamples/Ric-Operators.md`
-- **CLI invocation**: see the [fab-inspector-cli skill](../fab-inspector-cli/SKILL.md)
+- **CLI invocation**: see the `fab-inspector-cli` skill

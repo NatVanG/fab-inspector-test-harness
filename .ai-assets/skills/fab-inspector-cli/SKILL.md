@@ -231,13 +231,7 @@ See the [example GitHub Actions workflow](https://github.com/NatVanG/fab-inspect
 
 ## 9 — Registered operators
 
-The CLI registers the following custom JSONLogic operators at startup. These are available for use in rule definitions. See the **fab-inspector-rules** skill for full operator documentation.
-
-### Ric operators (general-purpose)
-`count`, `drillvar`, `filesize`, `filetextsearchcount`, `isnullorempty`, `partinfo`, `part`, `path`, `query`, `diff`, `equalsets`, `intersection`, `symdiff`, `union`, `strcontains`, `torecord`, `tostring`, `fromyamlfile`, `keys`, `values`, `distinct`, `typeof`, `hasprop`, `strsplit`, `strjoin`, `regexextract`, `coalesce`, `slice`, `now`, `datediff`, `let`
-
-### Fab Inspector operators (Fabric-specific)
-`rectoverlap`, `daxquery`, `apiget`, `dfsget`, `scannerapi`
+See the `fab-inspector-rules` skill for full operator documentation.
 
 ## 10 — Help
 
@@ -249,13 +243,7 @@ fab-inspector /?
 
 ## 11 — Cross-references
 
-- **Rule authoring**: see the `fab-inspector-rules` skill in this repository
+- **Rule authoring**: see the `fab-inspector-rules` skill
 - **Wiki**: https://github.com/NatVanG/PBI-InspectorV2/wiki
-- **Example rules**: `DocsExamples/` folder in this repository
-- **Base rules**: `Rules/Base-rules.json`
-
-
-
-
 
 

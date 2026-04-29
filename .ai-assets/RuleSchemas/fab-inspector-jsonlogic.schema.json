@@ -340,7 +340,7 @@
         },
         "path": {
           "description": "[Ric] Evaluates a JSONPath expression (RFC 9535) against the current data. Args: [jsonPath] or [jsonPath, defaultValue]. Returns array of matching values.",
-          "$ref": "#/$defs/args_unary_or_binary"
+          "$ref": "#/$defs/args_unary"
         },
         "query": {
           "description": "[Ric] Applies a JSONLogic rule using the first argument as contextData. Args: [inputData, logicRule]. Useful for transforming or querying nested data.",

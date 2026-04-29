@@ -45,7 +45,7 @@
         },
         "logType": {
           "type": "string",
-          "enum": ["error", "warning", "info"],
+          "enum": ["error", "warning"],
           "default": "warning",
           "description": "Severity level for rule violations. Default: \"warning\"."
         },
