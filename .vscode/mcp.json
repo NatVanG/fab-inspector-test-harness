@@ -1,0 +1,10 @@
+{
+    "servers": {
+        "fab-inspector": {
+            "command": "<fab-inspector-cli-path>",
+            "args": [
+                "serve"
+            ]
+        }
+    }
+}

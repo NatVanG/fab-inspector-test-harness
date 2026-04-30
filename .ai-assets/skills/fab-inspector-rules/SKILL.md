@@ -87,7 +87,7 @@ When `itemType` is `Report`, these reserved names are available:
 | `ReportExtensions` | The `reportExtensions.json` file content |
 | `Pages` | List of all `*.page.json` files (iterates each page) |
 | `PagesHeader` | The `pages.json` collection header |
-| `AllPages` | All pages as a single array |
+| `Pages` | All pages as a single array |
 | `Visuals` | Visual files (`*.visual.json`) in the context of the current part iterator |
 | `AllVisuals` | All visuals across the entire report |
 | `MobileVisuals` | Mobile visual files (`*.mobile.json`) in the current part context |
