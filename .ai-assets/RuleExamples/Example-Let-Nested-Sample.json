@@ -1,9 +1,10 @@
 {
+    "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
     "rules": [
         {
             "id": "LET_NESTED_LOCAL_BINDINGS_SAMPLE",
             "name": "Nested let with local mapped sample data",
-            "description": "Demonstrates local data mapping and nested let scoping. Outer let binds shared values; inner let derives dependent values from those bindings.",
+            "description": "Demonstrates that let variables can build upon previously declared variables.",
             "itemType": "none",
             "disabled": false,
             "test": [

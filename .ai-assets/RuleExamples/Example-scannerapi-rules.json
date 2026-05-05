@@ -1,4 +1,5 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "SCAN_CURRENT_WORKSPACE",

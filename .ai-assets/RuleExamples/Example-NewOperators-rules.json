@@ -1,4 +1,5 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "KEYS_LIST_PROPERTIES",
@@ -6,7 +7,7 @@
       "description": "Uses the 'keys' operator to return all top-level property names of a JSON object. Useful for discovering which properties are set on an object.",
       "disabled": true,
       "part": "Report",
-      "logType": "info",
+      "logType": "warning",
       "test": [
         {
           "keys": [

@@ -1,11 +1,12 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "AZURE_MAPS_ENABLED",
       "name": "Check tenant setting for AzureMaps is enabled if we want to deploy a Power BI report that uses the visual.",
       "logType": "error",
       "disabled": false,
-      "itemtype": "*",
+      "itemType": "*",
       "test": [
         {
           "if": [

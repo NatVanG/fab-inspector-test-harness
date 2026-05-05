@@ -34,6 +34,8 @@ Or for item-scoped workspace inspection:
 fab-inspector -fabricworkspace <guid> -fabricitem <guid> -rules <path|url> [options]
 ```
 
+*Best practice*: When sharing example commands, **never include real tokens, secrets, or credentials**. Use placeholders and clearly indicate that users must replace them with their own secure values.
+
 ## 3 — Complete parameter reference
 
 ### Required parameters
@@ -231,7 +233,7 @@ See the [example GitHub Actions workflow](https://github.com/NatVanG/fab-inspect
 
 ## 9 — Registered operators
 
-See the `fab-inspector-rules` skill for full operator documentation.
+See the `fab-inspector-rules-creation` skill for full operator documentation.
 
 ## 10 — Help
 
@@ -240,10 +242,3 @@ fab-inspector -help
 fab-inspector --help
 fab-inspector /?
 ```
-
-## 11 — Cross-references
-
-- **Rule authoring**: see the `fab-inspector-rules` skill
-- **Wiki**: https://github.com/NatVanG/PBI-InspectorV2/wiki
-
-

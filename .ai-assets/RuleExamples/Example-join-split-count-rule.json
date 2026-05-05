@@ -1,5 +1,5 @@
 {
-  "$schema": "../fab-inspector-rules.schema.json",
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "DEMO_JOIN_SPLIT_COUNT",

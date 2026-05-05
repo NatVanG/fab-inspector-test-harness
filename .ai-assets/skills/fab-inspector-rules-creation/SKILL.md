@@ -1,4 +1,4 @@
-| name | fab-inspector-rules |
+| name | fab-inspector-rules-creation |
 |------|---------------------|
 | description | Author Fab Inspector rules using JSONLogic to test Microsoft Fabric item definitions. Activate when users need to write, edit, debug, or understand inspection rules, operators, or the rule file format. |
 
@@ -209,7 +209,9 @@ Once defined in the data mapping, these variables can be accessed in the logic w
 | `["a", "b"]` | Exact array match |
 | `{ "key": "val" }` | Exact object match |
 
-**Best practice**: Design rules to return an **array of failing items** (e.g., visual names or item IDs) with an expected result of `[]`. This makes results actionable — you see exactly what failed. If the rule only returns `true`/`false`, you know something is wrong but not what.
+**Best practice**: 
+- Design rules to return an **array of failing items** (e.g., visual names or item IDs) with an expected result of `[]`. This makes results actionable — you see exactly what failed. If the rule only returns `true`/`false`, you know something is wrong but not what.
+- Use the `let` custom operator to avoid duplicate API calls or expensive operator evaluations.
 
 ## 4 — Built-in JSONLogic operators
 

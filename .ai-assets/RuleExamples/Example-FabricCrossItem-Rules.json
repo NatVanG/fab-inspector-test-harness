@@ -1,9 +1,10 @@
 {
+    "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
     "rules": [
         {
             "id": "VARLIBRARY_MISSINGREFERENCES",
             "name": "Check that all Pipeline variable library references exist in a Variable Library.",
-            "itemtype": "DataPipeline|VariableLibrary",
+            "itemType": "DataPipeline|VariableLibrary",
             "test": [
                 {
                     "diff": [

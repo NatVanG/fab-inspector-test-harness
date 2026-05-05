@@ -1,10 +1,11 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "ENVIRONMENT_SPARKCOMPUTE",
       "name": "Checks environment sparkcompute settings",
       "description": "Checks that the native execution engine is enabled.",
-      "itemtype": "Environment",
+      "itemType": "Environment",
       "part": "Sparkcompute.yml",
       "test": [
         {

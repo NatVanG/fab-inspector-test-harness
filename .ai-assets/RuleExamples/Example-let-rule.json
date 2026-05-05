@@ -1,11 +1,12 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
       "id": "LET_BASIC_BINDING",
       "name": "Basic let binding",
       "description": "The simplest use of 'let': bind a computed value to a name and reference it in the body. Here we compute the array once and count it. Useful when the same expression would otherwise appear multiple times.",
       "disabled": true,
-      "logType": "info",
+      "logType": "warning",
       "test": [
         {
           "let": [

@@ -1,6 +1,8 @@
 {
+  "$schema": "../../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
   "rules": [
     {
+      "id": "RETURN_VISUAL_PROPERTIES",
       "name": "Return visual properties",
       "description": "Returns an array of visual names",
       "part": "Pages",
