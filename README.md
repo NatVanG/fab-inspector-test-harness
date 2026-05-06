@@ -18,7 +18,7 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
 
 2. **.NET 8+ SDK** - check which SDK's you've installed by running `dotnet --list-sdks`, if under version 8 download from <https://dotnet.microsoft.com/en-us/download>
 
-3. **Azure CLI** - download from <https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli&pivots=winget>
+3. **Azure CLI** - used to sign in to Microsoft Fabric via Entra. Download from <https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli&pivots=winget>
 
 4. **Fab Inspector extension** — install from the VS Code Marketplace, see <https://marketplace.visualstudio.com/items?itemName=NatVanG.fab-inspector>  
    This extension provides the `fab-inspector` CLI to evaluate JSONLogic-based rules against Fabric item definitions and also includes the Fab Inspector MCP server.
@@ -41,7 +41,7 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
    - `rule.json` — the rule definition using Fab Inspector's JSONLogic format.
    - `examples/pass/` — a Fabric item definition(s) that should pass the rule.
    - `examples/fail/` — a Fabric item definition(s) that should fail the rule.
-7. The agent should also then automatically run the newly created rule by invoking the Fab Inspector MCP Server's `Inspect` tool. 
+7. The agent should also then automatically run the newly created rule by invoking the Fab Inspector MCP Server's `Inspect` tool. If the agent discovers that the rule needs the user to authenticate to Microsoft Fabric then it will ask the user if they are signed in. To check if you're signed in, run `az account show` from the terminal, if not then sign in with `az login`.
 8. To debug the rule manually, open the created `rules.json`, select a JSON node to inspect, right-click and select command `Fab Inspector: Log Wrap/Unwrap`. Save the file, then right-click the document and select `Fab Inspector: Run Current Rules`. The debug output will be displayed in the VS Code `Output` window.
 
 ![Rules run example](./docs/RunRules.png "Rules run example")
@@ -55,6 +55,9 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
 ## Example prompts
 
 - "Create a rule that checks if a logo/image is present in the top left hand corner of each visible report page, exclude tooltip and drillthrough pages from the test."
+- "Create a rule that returns a list of Report pages that are hidden and are not configured as Tooltip or Drillthrough and cannot be accessed because the report does not have a navigation button for that page."
+- "Create a rule that returns a list of Report pages that are hidden and are configured as Drillthrough but are not being referenced by other any pages and therefore unreachable."
+- "Create a rule that checks that the Lakehouse names in the context workspace start with `LH_`. Use the Fabric API to get the Lakehouse items for the worspace. Return the names of Lakehouses that fail the test.
 
 ## License
 
