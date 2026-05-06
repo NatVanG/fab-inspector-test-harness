@@ -59,6 +59,85 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
 - "Create a rule that returns a list of Report pages that are hidden and are configured as Drillthrough but are not being referenced by other any pages and therefore unreachable."
 - "Create a rule that checks that the Lakehouse names in the context workspace start with `LH_`. Use the Fabric API to get the Lakehouse items for the worspace. Return the names of Lakehouses that fail the test.
 
+## Additional rule ideas to prompt for
+
+### Power BI Report Rules
+
+**1. Approved Custom Theme Enforcement** (`Report`)
+Inspect `themeCollection.customTheme.name` in `report.json` and verify it matches an approved corporate theme name. Flags reports using ad-hoc or default themes.
+
+**2. Default Page Names Detected** (`Report`, `Pages` iterator)
+Find pages whose `displayName` matches the pattern "Page N" (e.g. "Page 1", "Page 2"). Returns the names of all non-renamed pages as an actionable list.
+
+**3. Visual Overlap on Report Pages** (`Report`, `Pages` iterator)
+Use the `rectoverlap` operator against all visible visuals per page to detect any that overlap. Returns pairs of overlapping visual names.
+
+**4. Unapproved Custom Visuals** (`Report`, `Report` part)
+Diff the `publicCustomVisuals` array in `report.json` against an approved allowlist defined in the rule's data mapping. Returns any unapproved visual type IDs.
+
+**5. Excessive Page Count** (`Report`)
+Count pages using `count` on the `Pages` part and fail if the count exceeds a governance threshold (e.g. 15). Encourages splitting over-crowded reports.
+
+**6. Report Semantic Model Binding Portability** (`Report`, `definition.pbir` part)
+Ensure `datasetReference` uses `byPath` (relative path) rather than `byConnection` (hardcoded GUID). A `byConnection` binding breaks when a report is deployed across environments.
+
+**7. Enhanced Tooltips Not Enabled** (`Report`, `Report` part)
+Check that `settings.useEnhancedTooltips` is `true` in `report.json`. Enhanced tooltips improve user experience and should be enabled by default.
+
+**8. Cross-Highlight Not Disabled for Slow Sources** (`Report`, `Report` part)
+Check that `slowDataSourceSettings.isCrossHighlightingDisabled` is `false`. Disabling cross-highlighting hides valuable interaction features.
+
+### Data Pipeline Rules
+
+**9. Activities Missing Retry Policy** (`DataPipeline`, `pipeline-content.json`)
+Filter activities of types `Copy`, `TridentNotebook`, and `SparkJobDefinition` where `policy.retry` is `0` or absent. Returns the names of under-protected activities.
+
+**10. Deprecated InvokePipeline Activity Usage** (`DataPipeline`, `pipeline-content.json`)
+Flag any activities with `type: "InvokePipeline"`, which is deprecated. They should be replaced with `ExecutePipeline`.
+
+**11. Web Activity Certificate Validation Disabled** (`DataPipeline`, `pipeline-content.json`)
+Flag `WebActivity` or `WebHook` activities where `typeProperties.disableCertValidation` is `true`. This is a security misconfiguration.
+
+**12. Pipeline Missing Description** (`DataPipeline`, `pipeline-content.json`)
+Check that `properties.description` is non-null and non-empty. Undescribed pipelines are hard to govern and document.
+
+**13. ForEach Unconstrained Batch Count** (`DataPipeline`, `pipeline-content.json`)
+Find `ForEach` activities where `isSequential` is `false` and `batchCount` is either missing or exceeds a threshold (e.g. 50). Prevents accidental fan-out that overwhelms downstream services.
+
+**14. Secure Input/Output Not Enabled on Copy Activities** (`DataPipeline`, `pipeline-content.json`)
+Flag `Copy` activities where `policy.secureInput` or `policy.secureOutput` is `false`. Ensures sensitive source/sink data is not written to monitoring logs.
+
+### Copy Job Rules
+
+**15. CopyJob Missing Retry Count** (`CopyJob`, `copyjob-content.json`)
+Verify `properties.policy.retry` is set to at least `1`. CopyJobs without a retry are fragile under transient network or service failures.
+
+**16. CDC Mode Activities Missing Upsert Keys** (`CopyJob`, `copyjob-content.json`)
+For CopyJobs with `jobMode: "CDC"`, filter activities where `destination.upsertSettings.keys` is null or empty. Missing keys prevent correct CDC merge behaviour.
+
+**17. CopyJob Staging Unexpectedly Enabled** (`CopyJob`, `copyjob-content.json`)
+Flag activities where `enableStaging: true`. Staging should be intentional — it adds latency and cost and is often left on accidentally.
+
+### Notebook Rules
+
+**18. Notebook Missing Default Lakehouse Dependency** (`Notebook`, `notebook-content.py`)
+Inspect the `# META` block at the top of the notebook content file for a `dependencies` section and flag notebooks where no default Lakehouse is configured. Notebooks without a Lakehouse dependency may fail at runtime.
+
+### Workspace-Level API Rules (require `azurecli` auth + `apiget`)
+
+**19. Items Without a Description** (API, `none` itemType, workspace-scoped)
+Call `GET /v1/workspaces/{context-fabricworkspace}/items`, filter for items where `description` is null or empty, and return their `displayName` values. Enforces a documentation standard across all item types.
+
+**20. Item Naming Convention Compliance** (API, `none` itemType, workspace-scoped)
+Query all workspace items and flag any whose `displayName` does not match a required prefix or casing convention (e.g. must start with a known domain abbreviation like `FIN_`, `HR_`, `OPS_`). Uses `regexextract` and `filter`.
+
+**21. OneLake Workspace Storage Settings Audit** (API, `none` itemType, workspace-scoped)
+Call `GET /v1/workspaces/{context-fabricworkspace}/onelake/settings` and verify that expected properties (e.g. log retention or soft-delete) are enabled per governance policy.
+
+**22. Workspace Contains Lakehouses** (API, `none` itemType, workspace-scoped)
+Query `GET /v1/workspaces/{context-fabricworkspace}/items?type=Lakehouse` and verify at least one Lakehouse is present. Workspaces intended for data engineering that lack a Lakehouse are likely misconfigured.
+
+
 ## License
 
 Fab Inspector and the Fab Inspector Test Harness are released under the MIT license.

@@ -14,7 +14,7 @@
             "{context-fabricworkspace}",
             "{context-fabricitem}",
             true,
-            "EIT_Finance_Dev1@MngEnv339194.onmicrosoft.com"
+            "Dev1@env.onmicrosoft.com"
           ]
         },
         ["Canada"]
