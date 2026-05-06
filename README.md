@@ -12,16 +12,20 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
 
 ## Pre-requisites
 
+:note: Currently this solution only runs on win-x64.
+
 1. **Visual Studio Code** — download from <https://code.visualstudio.com>.
 
 2. **.NET 8+ SDK** - check which SDK's you've installed by running `dotnet --list-sdks`, if under version 8 download from <https://dotnet.microsoft.com/en-us/download>
 
-3. **Fab Inspector extension** — install from the VS Code Marketplace, see <https://marketplace.visualstudio.com/items?itemName=NatVanG.fab-inspector>  
+3. **Azure CLI** - download from <https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli&pivots=winget>
+
+4. **Fab Inspector extension** — install from the VS Code Marketplace, see <https://marketplace.visualstudio.com/items?itemName=NatVanG.fab-inspector>  
    This extension provides the `fab-inspector` CLI to evaluate JSONLogic-based rules against Fabric item definitions and also includes the Fab Inspector MCP server.
 
-4. **Fabric MCP Server extension** — this should get installed automatically as a dependency of the Fab Inspector extension; if not, install from the VS Code MarketPlace, see <https://marketplace.visualstudio.com/items?itemName=fabric.vscode-fabric-mcp-server>. This extension exposes Microsoft Fabric metadata (item definitions, workload schemas, etc.) to GitHub Copilot through MCP, enabling AI-assisted rule authoring with real schema evidence.
+5. **Fabric MCP Server extension** — this should get installed automatically as a dependency of the Fab Inspector extension; if not, install from the VS Code MarketPlace, see <https://marketplace.visualstudio.com/items?itemName=fabric.vscode-fabric-mcp-server>. This extension exposes Microsoft Fabric metadata (item definitions, workload schemas, etc.) to GitHub Copilot through MCP, enabling AI-assisted rule authoring with real schema evidence.
 
-5. **GitHub Copilot** :copilot: (recommended) — the repo includes instruction files and skills that let Copilot generate, explain, and validate Fab Inspector rules using natural-language prompts.
+6. **GitHub Copilot** :copilot: (recommended) — the repo includes instruction files and skills that let Copilot generate, explain, and validate Fab Inspector rules using natural-language prompts.
 
 ## Quick start
 
