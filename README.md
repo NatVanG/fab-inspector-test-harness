@@ -1,14 +1,18 @@
 # Fab Inspector Test Harness
 
-A workspace for authoring, testing, and validating [**Fab Inspector**](https://github.com/NatVanG/fab-inspector) rules against Microsoft Fabric item definitions and Fabric API calls. Use it to develop custom governance rules locally, verify them against pass/fail example items, and iterate with AI-assisted rule generation before enforcing them in CI/CD pipelines.
+A workspace for agentic authoring, testing, and validating [**Fab Inspector**](https://github.com/NatVanG/fab-inspector) rules against Microsoft Fabric item definitions and Fabric API calls. Use it to develop custom governance rules locally, verify them against pass/fail example items, and iterate with AI-assisted rule generation before enforcing them in CI/CD pipelines.
+
+This repo doubles up as a development area for the Fab Inspector agent's instructions as I'm trying to find out what works best. Thanks for any contribution via pull requests.
 
 ## Repository structure
+
+Either clone this repo or use it as a template for your own repository.
 
 | Folder | Purpose |
 |---|---|
 | `fab-inspector-rules/` | Custom Fab Inspector rules. Each rule lives in its own folder with a `rule.json`, a `README.md`, and `examples/pass` and `examples/fail` Fabric item definitions for local testing. |
-| `.ai-assets/` | Rule schemas, example rules, and AI skills that help GitHub Copilot author and validate rules. |
-| `.github/instructions/` | Copilot instruction files for CLI usage and rule authoring guidance. |
+| `.ai-assets/` | Rule schemas, example rules, and AI skills that help author and validate rules. |
+| `.github/` | Agent and Copilot instruction files for CLI usage and rule authoring guidance. |
 
 ## Pre-requisites
 
@@ -21,7 +25,12 @@ A workspace for authoring, testing, and validating [**Fab Inspector**](https://g
 3. **Azure CLI** - used to sign in to Microsoft Fabric via Entra. Download from <https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli&pivots=winget>
 
 4. **Fab Inspector extension** — install from the VS Code Marketplace, see <https://marketplace.visualstudio.com/items?itemName=NatVanG.fab-inspector>  
-   This extension provides the `fab-inspector` CLI to evaluate JSONLogic-based rules against Fabric item definitions and also includes the Fab Inspector MCP server.
+   This extension wraps the `fab-inspector CLI` to evaluate JSONLogic-based rules against Fabric item definitions and also includes the Fab Inspector MCP server.
+
+   :warning: Ensure that the `fab-inspector CLI` is installed as part of the extension by running the following commands in the VS Code search bar:
+   - `> Fab Inspector: Show CLI Info` to see what is there; if not Available or no Age or Last Modified shown then run: 
+   - `> Fab Inspector: Update CLI`. After download and extraction, the `Fab Inspector MCP` server should show up when running:
+   - `> MCP: List Servers`. Select and start the listed `Fab Inspector MCP` server.
 
 5. **Fabric MCP Server extension** — this should get installed automatically as a dependency of the Fab Inspector extension; if not, install from the VS Code MarketPlace, see <https://marketplace.visualstudio.com/items?itemName=fabric.vscode-fabric-mcp-server>. This extension exposes Microsoft Fabric metadata (item definitions, workload schemas, etc.) to GitHub Copilot through MCP, enabling AI-assisted rule authoring with real schema evidence.
 
@@ -140,4 +149,4 @@ Query `GET /v1/workspaces/{context-fabricworkspace}/items?type=Lakehouse` and ve
 
 ## License
 
-Fab Inspector and the Fab Inspector Test Harness are released under the MIT license.
+Fab Inspector, the Fab Inspector VS Code extension and the Fab Inspector Test Harness are released under the MIT license.
