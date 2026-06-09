@@ -4,7 +4,7 @@
     {
       "id": "NOTEBOOK_FILE_NAME_MATCHES_DISPLAY_NAME",
       "name": "Notebook File Names Must Match Item Display Name",
-      "description": "Returns notebook file name when normalized file stem does not align to normalized displayName from .platform metadata.",
+      "description": "Returns notebook file name when normalized file stem does not align to normalized displayName from .platform metadata. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Notebook",
       "part": "notebook-content.py",
       "test": [

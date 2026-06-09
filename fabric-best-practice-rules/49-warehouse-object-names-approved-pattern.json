@@ -4,7 +4,7 @@
     {
       "id": "WAREHOUSE_OBJECT_NAMES_APPROVED_PATTERN",
       "name": "Warehouse Object Names Must Use Approved Pattern",
-      "description": "Returns object names violating schema/table/view/procedure naming conventions.",
+      "description": "Returns object names violating schema/table/view/procedure naming conventions. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

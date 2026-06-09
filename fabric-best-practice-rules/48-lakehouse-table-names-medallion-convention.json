@@ -4,7 +4,7 @@
     {
       "id": "LAKEHOUSE_TABLE_NAMES_MEDALLION_CONVENTION",
       "name": "Lakehouse Table Names Must Follow Medallion Convention",
-      "description": "Returns table names that do not follow bronze/silver/gold schema or prefix naming.",
+      "description": "Returns table names that do not follow bronze/silver/gold schema or prefix naming. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

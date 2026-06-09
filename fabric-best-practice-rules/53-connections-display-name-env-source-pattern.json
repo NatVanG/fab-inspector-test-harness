@@ -4,7 +4,7 @@
     {
       "id": "API_CONNECTION_DISPLAYNAME_ENV_SOURCE_PATTERN",
       "name": "Connection Display Names Must Embed Environment and Source Type",
-      "description": "Returns connection display names that do not match ENV_Source_Name pattern.",
+      "description": "Returns connection display names that do not match ENV_Source_Name pattern. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

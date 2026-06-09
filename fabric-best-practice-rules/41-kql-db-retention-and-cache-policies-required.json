@@ -4,7 +4,7 @@
     {
       "id": "KQLDB_RETENTION_AND_CACHE_POLICIES_REQUIRED",
       "name": "KQL Database Must Define Retention and Cache Policies",
-      "description": "Returns markers for missing retention/cache policy properties in database definition.",
+      "description": "Returns markers for missing retention/cache policy properties in database definition. WARNING: This rule was AI-generated and is untested.",
       "itemType": "KQLDatabase",
       "part": "DatabaseProperties.json",
       "test": [

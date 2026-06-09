@@ -4,7 +4,7 @@
     {
       "id": "API_ITEM_DISPLAYNAME_PREFIX_BY_TYPE",
       "name": "Item Display Name Prefix Matches Item Type",
-      "description": "Returns item display names where the type-specific prefix does not match the approved convention map.",
+      "description": "Returns item display names where the type-specific prefix does not match the approved convention map. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

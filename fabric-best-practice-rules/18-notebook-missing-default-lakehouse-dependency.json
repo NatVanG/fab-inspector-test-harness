@@ -4,7 +4,7 @@
     {
       "id": "NOTEBOOK_MISSING_DEFAULT_LAKEHOUSE_DEPENDENCY",
       "name": "Notebook Missing Default Lakehouse Dependency",
-      "description": "Returns the notebook file when no default Lakehouse dependency pattern is found in the metadata block.",
+      "description": "Returns the notebook file when no default Lakehouse dependency pattern is found in the metadata block. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Notebook",
       "part": "notebook-content.py",
       "test": [

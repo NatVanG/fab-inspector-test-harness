@@ -4,7 +4,7 @@
     {
       "id": "NOTEBOOK_VORDER_MUST_NOT_BE_DISABLED",
       "name": "Notebook Spark Session Must Enable V-Order for Gold Workloads",
-      "description": "Returns notebook file name when code disables v-order settings.",
+      "description": "Returns notebook file name when code disables v-order settings. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Notebook",
       "part": "notebook-content.py",
       "test": [

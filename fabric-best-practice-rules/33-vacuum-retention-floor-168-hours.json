@@ -4,7 +4,7 @@
     {
       "id": "NOTEBOOK_VACUUM_RETENTION_FLOOR",
       "name": "Lakehouse Table Maintenance VACUUM Retention Floor",
-      "description": "Returns notebook file name when VACUUM RETAIN uses retention below 168 hours.",
+      "description": "Returns notebook file name when VACUUM RETAIN uses retention below 168 hours. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Notebook",
       "part": "notebook-content.py",
       "test": [

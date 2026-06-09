@@ -4,7 +4,7 @@
     {
       "id": "API_ITEMS_WITHOUT_DESCRIPTION",
       "name": "Items Without a Description",
-      "description": "Calls the workspace items API and returns display names where description is null or empty.",
+      "description": "Calls the workspace items API and returns display names where description is null or empty. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

@@ -4,7 +4,7 @@
     {
       "id": "API_INBOUND_PUBLIC_ACCESS_MUST_BE_DENIED",
       "name": "Inbound Public Access Must Be Denied",
-      "description": "Returns a marker if inbound.publicAccessRules.defaultAction is not Deny.",
+      "description": "Returns a marker if inbound.publicAccessRules.defaultAction is not Deny. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

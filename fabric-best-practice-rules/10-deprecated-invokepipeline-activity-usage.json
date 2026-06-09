@@ -4,7 +4,7 @@
     {
       "id": "DP_DEPRECATED_INVOKEPIPELINE_USAGE",
       "name": "Deprecated InvokePipeline Activity Usage",
-      "description": "Returns activity names using deprecated type InvokePipeline.",
+      "description": "Returns activity names using deprecated type InvokePipeline. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [

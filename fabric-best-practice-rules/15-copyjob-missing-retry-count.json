@@ -4,7 +4,7 @@
     {
       "id": "COPYJOB_MISSING_RETRY_COUNT",
       "name": "CopyJob Missing Retry Count",
-      "description": "Asserts CopyJob properties.policy.retry is set to at least 1.",
+      "description": "Asserts CopyJob properties.policy.retry is set to at least 1. WARNING: This rule was AI-generated and is untested.",
       "itemType": "CopyJob",
       "part": "copyjob-content.json",
       "test": [

@@ -4,7 +4,7 @@
     {
       "id": "MIRROREDDB_MUST_NOT_USE_BASIC_AUTH",
       "name": "Mirrored Database Connection Must Not Use Basic Authentication",
-      "description": "Returns a marker when credentialType indicates basic authentication.",
+      "description": "Returns a marker when credentialType indicates basic authentication. WARNING: This rule was AI-generated and is untested.",
       "itemType": "MirroredDatabase",
       "part": "mirroring.json",
       "test": [

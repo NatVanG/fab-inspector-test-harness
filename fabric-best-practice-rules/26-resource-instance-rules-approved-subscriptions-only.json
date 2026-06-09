@@ -4,7 +4,7 @@
     {
       "id": "API_RESOURCE_INSTANCE_RULES_APPROVED_SUBSCRIPTIONS",
       "name": "Resource Instance Rules Use Only Approved Subscriptions",
-      "description": "Returns resource IDs that do not contain an approved subscription GUID segment.",
+      "description": "Returns resource IDs that do not contain an approved subscription GUID segment. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

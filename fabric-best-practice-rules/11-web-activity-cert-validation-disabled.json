@@ -4,7 +4,7 @@
     {
       "id": "DP_WEB_ACTIVITY_CERT_VALIDATION_DISABLED",
       "name": "Web Activity Certificate Validation Disabled",
-      "description": "Returns WebActivity or WebHook activity names where disableCertValidation is true.",
+      "description": "Returns WebActivity or WebHook activity names where disableCertValidation is true. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [

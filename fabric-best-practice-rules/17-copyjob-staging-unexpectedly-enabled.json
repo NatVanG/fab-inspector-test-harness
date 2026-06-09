@@ -4,7 +4,7 @@
     {
       "id": "COPYJOB_STAGING_UNEXPECTEDLY_ENABLED",
       "name": "CopyJob Staging Unexpectedly Enabled",
-      "description": "Returns activity names where enableStaging is true.",
+      "description": "Returns activity names where enableStaging is true. WARNING: This rule was AI-generated and is untested.",
       "itemType": "CopyJob",
       "part": "copyjob-content.json",
       "test": [

@@ -4,7 +4,7 @@
     {
       "id": "DP_FOREACH_UNCONSTRAINED_BATCHCOUNT",
       "name": "ForEach Unconstrained Batch Count",
-      "description": "Returns ForEach activity names where isSequential=false and batchCount is missing or > 50.",
+      "description": "Returns ForEach activity names where isSequential=false and batchCount is missing or > 50. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [

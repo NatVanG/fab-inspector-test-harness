@@ -4,7 +4,7 @@
     {
       "id": "SEMANTICMODEL_RELATIONSHIPS_USE_INTEGER_KEYS",
       "name": "Semantic Model Must Use Integer Keys in Relationships",
-      "description": "Returns relationship names where model annotations explicitly mark keyType as string.",
+      "description": "Returns relationship names where model annotations explicitly mark keyType as string. WARNING: This rule was AI-generated and is untested.",
       "itemType": "SemanticModel",
       "part": "model.bim",
       "test": [

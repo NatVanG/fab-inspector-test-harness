@@ -4,7 +4,7 @@
     {
       "id": "COPYJOB_CDC_MISSING_UPSERT_KEYS",
       "name": "CDC Mode Activities Missing Upsert Keys",
-      "description": "In CDC mode, returns activity names where destination.upsertSettings.keys is missing or empty.",
+      "description": "In CDC mode, returns activity names where destination.upsertSettings.keys is missing or empty. WARNING: This rule was AI-generated and is untested.",
       "itemType": "CopyJob",
       "part": "copyjob-content.json",
       "test": [

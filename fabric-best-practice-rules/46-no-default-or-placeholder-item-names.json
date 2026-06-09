@@ -4,7 +4,7 @@
     {
       "id": "API_NO_DEFAULT_OR_PLACEHOLDER_ITEM_NAMES",
       "name": "No Default or Placeholder Names",
-      "description": "Returns item display names that match default/placeholder naming patterns.",
+      "description": "Returns item display names that match default/placeholder naming patterns. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

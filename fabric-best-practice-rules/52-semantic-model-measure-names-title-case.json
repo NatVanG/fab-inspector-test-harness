@@ -4,7 +4,7 @@
     {
       "id": "SEMANTICMODEL_MEASURE_NAMES_TITLE_CASE",
       "name": "Semantic Model Measure Names Must Use Title Case Without Underscores",
-      "description": "Returns measure names that do not match title-case friendly naming pattern.",
+      "description": "Returns measure names that do not match title-case friendly naming pattern. WARNING: This rule was AI-generated and is untested.",
       "itemType": "SemanticModel",
       "part": "model.bim",
       "test": [

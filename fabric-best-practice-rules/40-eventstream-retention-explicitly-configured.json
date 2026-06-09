@@ -4,7 +4,7 @@
     {
       "id": "EVENTSTREAM_RETENTION_EXPLICITLY_CONFIGURED",
       "name": "Eventstream Retention Explicitly Configured",
-      "description": "Returns a marker when retentionInDays is missing or outside [1, 90].",
+      "description": "Returns a marker when retentionInDays is missing or outside [1, 90]. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Eventstream",
       "part": "eventstream.json",
       "test": [

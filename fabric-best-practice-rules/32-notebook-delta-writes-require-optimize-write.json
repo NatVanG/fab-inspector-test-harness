@@ -4,7 +4,7 @@
     {
       "id": "NOTEBOOK_DELTA_WRITES_REQUIRE_OPTIMIZEWRITE",
       "name": "Notebook Writing Delta Tables Must Set Optimize-Write",
-      "description": "Returns notebook file name when Delta write patterns exist but optimizeWrite enablement is absent.",
+      "description": "Returns notebook file name when Delta write patterns exist but optimizeWrite enablement is absent. WARNING: This rule was AI-generated and is untested.",
       "itemType": "Notebook",
       "part": "notebook-content.py",
       "test": [

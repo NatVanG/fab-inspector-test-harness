@@ -4,7 +4,7 @@
     {
       "id": "API_ONELAKE_ITEM_NAMES_LAKEHOUSE_SAFE",
       "name": "Item Display Names Must Be Lakehouse-Safe Identifiers",
-      "description": "Returns names of OneLake materialized item types whose displayName fails Lakehouse-safe naming regex.",
+      "description": "Returns names of OneLake materialized item types whose displayName fails Lakehouse-safe naming regex. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

@@ -4,7 +4,7 @@
     {
       "id": "SEMANTICMODEL_DIRECTLAKE_DIRECTQUERY_FALLBACK_DISABLED",
       "name": "Direct Lake Semantic Model Must Disable DirectQuery Fallback",
-      "description": "For models containing directLake mode tables, returns a marker if directLakeBehavior is not DirectLakeOnly.",
+      "description": "For models containing directLake mode tables, returns a marker if directLakeBehavior is not DirectLakeOnly. WARNING: This rule was AI-generated and is untested.",
       "itemType": "SemanticModel",
       "part": "model.bim",
       "test": [

@@ -4,7 +4,7 @@
     {
       "id": "API_ONELAKE_WORKSPACE_STORAGE_SETTINGS_AUDIT",
       "name": "OneLake Workspace Storage Settings Audit",
-      "description": "Calls OneLake settings and returns missing expected top-level properties.",
+      "description": "Calls OneLake settings and returns missing expected top-level properties. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

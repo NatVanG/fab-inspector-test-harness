@@ -4,7 +4,7 @@
     {
       "id": "DP_PIPELINE_MISSING_DESCRIPTION",
       "name": "Pipeline Missing Description",
-      "description": "Asserts that properties.description is not null or empty.",
+      "description": "Asserts that properties.description is not null or empty. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [

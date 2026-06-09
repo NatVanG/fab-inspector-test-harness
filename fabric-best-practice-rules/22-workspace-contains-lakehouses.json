@@ -4,7 +4,7 @@
     {
       "id": "API_WORKSPACE_CONTAINS_LAKEHOUSES",
       "name": "Workspace Contains Lakehouses",
-      "description": "Returns a marker when the workspace has zero Lakehouse items.",
+      "description": "Returns a marker when the workspace has zero Lakehouse items. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

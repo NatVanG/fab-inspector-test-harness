@@ -4,7 +4,7 @@
     {
       "id": "DP_ACTIVITY_NAMES_MUST_BE_DESCRIPTIVE",
       "name": "Data Pipeline Activity Names Must Be Descriptive",
-      "description": "Returns activity names that match default Fabric naming patterns.",
+      "description": "Returns activity names that match default Fabric naming patterns. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [

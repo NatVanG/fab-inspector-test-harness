@@ -4,7 +4,7 @@
     {
       "id": "API_ITEM_NAMING_CONVENTION_COMPLIANCE",
       "name": "Item Naming Convention Compliance",
-      "description": "Returns item display names that do not start with one of the approved domain prefixes.",
+      "description": "Returns item display names that do not start with one of the approved domain prefixes. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

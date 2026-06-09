@@ -4,7 +4,7 @@
     {
       "id": "SEMANTICMODEL_DIRECTLAKE_HIGH_CARDINALITY_PARTITIONS",
       "name": "Direct Lake Tables Must Not Partition on High-Cardinality Columns",
-      "description": "Uses optional model metadata hints and returns partition columns explicitly marked with highCardinality=true.",
+      "description": "Uses optional model metadata hints and returns partition columns explicitly marked with highCardinality=true. WARNING: This rule was AI-generated and is untested.",
       "itemType": "SemanticModel",
       "part": "model.bim",
       "test": [

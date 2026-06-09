@@ -4,7 +4,7 @@
     {
       "id": "WAREHOUSE_RLS_POLICY_MUST_BE_ENABLED",
       "name": "Row-Level Security Policy Must Be Enabled",
-      "description": "Returns disabled security policy names from sys.security_policies.",
+      "description": "Returns disabled security policy names from sys.security_policies. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

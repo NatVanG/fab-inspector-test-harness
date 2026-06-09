@@ -4,7 +4,7 @@
     {
       "id": "ADMIN_TENANT_NETWORKING_POLICY_AUDIT",
       "name": "Tenant-Wide Networking Policy Audit",
-      "description": "Calls admin networking communication policies and returns workspace IDs where inbound or outbound defaultAction is Allow.",
+      "description": "Calls admin networking communication policies and returns workspace IDs where inbound or outbound defaultAction is Allow. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

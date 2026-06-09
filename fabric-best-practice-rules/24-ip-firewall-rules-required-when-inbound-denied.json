@@ -4,7 +4,7 @@
     {
       "id": "API_IP_FIREWALL_RULES_REQUIRED_WHEN_INBOUND_DENIED",
       "name": "IP Firewall Rules Configured When Inbound Is Denied",
-      "description": "Returns a marker if inbound default is Deny and firewall rules array is empty.",
+      "description": "Returns a marker if inbound default is Deny and firewall rules array is empty. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

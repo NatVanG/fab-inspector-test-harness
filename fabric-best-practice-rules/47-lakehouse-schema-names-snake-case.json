@@ -4,7 +4,7 @@
     {
       "id": "LAKEHOUSE_SCHEMA_NAMES_SNAKE_CASE",
       "name": "Lakehouse Schema Names Must Be Snake-Case Identifiers",
-      "description": "Returns schema names that are not lower snake_case from INFORMATION_SCHEMA.SCHEMATA.",
+      "description": "Returns schema names that are not lower snake_case from INFORMATION_SCHEMA.SCHEMATA. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

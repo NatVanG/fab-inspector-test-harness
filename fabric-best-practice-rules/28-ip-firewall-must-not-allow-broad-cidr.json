@@ -4,7 +4,7 @@
     {
       "id": "API_IP_FIREWALL_NO_BROAD_CIDR",
       "name": "IP Firewall Rules Must Not Contain Wildcard or Broad CIDR Ranges",
-      "description": "Returns firewall rule values matching 0.0.0.0/0 or very broad CIDR ranges (/0, /8, /12).",
+      "description": "Returns firewall rule values matching 0.0.0.0/0 or very broad CIDR ranges (/0, /8, /12). WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

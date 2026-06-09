@@ -4,7 +4,7 @@
     {
       "id": "WAREHOUSE_SENSITIVE_COLUMNS_REQUIRE_MASKING",
       "name": "Sensitive Columns Must Have Dynamic Data Masking",
-      "description": "Returns sensitive column names not masked according to keyword pattern.",
+      "description": "Returns sensitive column names not masked according to keyword pattern. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

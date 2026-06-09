@@ -4,7 +4,7 @@
     {
       "id": "WAREHOUSE_RLS_PREDICATES_REQUIRE_SCHEMABINDING",
       "name": "Row-Level Security Predicates Must Use SCHEMABINDING",
-      "description": "Returns security policy names where is_schema_bound = 0.",
+      "description": "Returns security policy names where is_schema_bound = 0. WARNING: This rule was AI-generated and is untested.",
       "itemType": "none",
       "test": [
         {

@@ -4,7 +4,7 @@
     {
       "id": "DP_ACTIVITIES_MISSING_RETRY_POLICY",
       "name": "Activities Missing Retry Policy",
-      "description": "Returns Copy, TridentNotebook, and SparkJobDefinition activities where policy.retry is missing or 0.",
+      "description": "Returns Copy, TridentNotebook, and SparkJobDefinition activities where policy.retry is missing or 0. WARNING: This rule was AI-generated and is untested.",
       "itemType": "DataPipeline",
       "part": "pipeline-content.json",
       "test": [
