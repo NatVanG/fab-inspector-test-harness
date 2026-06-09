@@ -1,0 +1,37 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_INBOUND_PUBLIC_ACCESS_MUST_BE_DENIED",
+      "name": "Inbound Public Access Must Be Denied",
+      "description": "Returns a marker if inbound.publicAccessRules.defaultAction is not Deny.",
+      "itemType": "none",
+      "test": [
+        {
+          "if": [
+            {
+              "!=": [
+                {
+                  "query": [
+                    {
+                      "apiget": [
+                        "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/networking/communicationPolicy"
+                      ]
+                    },
+                    {
+                      "var": "inbound.publicAccessRules.defaultAction"
+                    }
+                  ]
+                },
+                "Deny"
+              ]
+            },
+            ["INBOUND_DEFAULT_NOT_DENY"],
+            []
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

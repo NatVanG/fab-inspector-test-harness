@@ -1,0 +1,53 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "SEMANTICMODEL_DIRECTLAKE_DIRECTQUERY_FALLBACK_DISABLED",
+      "name": "Direct Lake Semantic Model Must Disable DirectQuery Fallback",
+      "description": "For models containing directLake mode tables, returns a marker if directLakeBehavior is not DirectLakeOnly.",
+      "itemType": "SemanticModel",
+      "part": "model.bim",
+      "test": [
+        {
+          "let": [
+            {
+              "directLakeTables": {
+                "path": "$..tables[?(@.mode=='directLake')]"
+              },
+              "behavior": {
+                "path": "$..directLakeBehavior"
+              }
+            },
+            {
+              "if": [
+                {
+                  "and": [
+                    { ">": [ { "count": [ { "var": "directLakeTables" } ] }, 0 ] },
+                    {
+                      "==": [
+                        {
+                          "count": [
+                            {
+                              "filter": [
+                                { "var": "behavior" },
+                                { "==": [ { "var": "" }, "DirectLakeOnly" ] }
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                ["DIRECTLAKE_FALLBACK_NOT_DISABLED"],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

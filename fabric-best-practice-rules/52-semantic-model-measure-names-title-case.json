@@ -1,0 +1,39 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "SEMANTICMODEL_MEASURE_NAMES_TITLE_CASE",
+      "name": "Semantic Model Measure Names Must Use Title Case Without Underscores",
+      "description": "Returns measure names that do not match title-case friendly naming pattern.",
+      "itemType": "SemanticModel",
+      "part": "model.bim",
+      "test": [
+        {
+          "filter": [
+            {
+              "path": "$..measures[*].name"
+            },
+            {
+              "==": [
+                {
+                  "count": [
+                    {
+                      "regexextract": [
+                        {
+                          "var": ""
+                        },
+                        "^[A-Z][A-Za-z0-9 %()/.-]*$"
+                      ]
+                    }
+                  ]
+                },
+                0
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

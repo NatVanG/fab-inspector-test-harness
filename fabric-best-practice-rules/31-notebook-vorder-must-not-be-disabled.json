@@ -1,0 +1,40 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "NOTEBOOK_VORDER_MUST_NOT_BE_DISABLED",
+      "name": "Notebook Spark Session Must Enable V-Order for Gold Workloads",
+      "description": "Returns notebook file name when code disables v-order settings.",
+      "itemType": "Notebook",
+      "part": "notebook-content.py",
+      "test": [
+        {
+          "let": [
+            {
+              "pathInfo": { "partinfo": "" },
+              "matches": {
+                "filetextsearchcount": [
+                  {
+                    "query": [
+                      { "partinfo": "" },
+                      { "var": "filesystempath" }
+                    ]
+                  },
+                  "(?i)(spark\\.sql\\.parquet\\.vorder\\.default\\s*['\"]?[,=]\\s*['\"]?false|set\\s+spark\\.sql\\.parquet\\.vorder\\.default\\s*=\\s*false|vorder\\.enabled\\s*=\\s*false)"
+                ]
+              }
+            },
+            {
+              "if": [
+                { ">": [ { "var": "matches" }, 0 ] },
+                [ { "var": "pathInfo.filesystemname" } ],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

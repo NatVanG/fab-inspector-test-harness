@@ -1,0 +1,44 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "KQLDB_RETENTION_AND_CACHE_POLICIES_REQUIRED",
+      "name": "KQL Database Must Define Retention and Cache Policies",
+      "description": "Returns markers for missing retention/cache policy properties in database definition.",
+      "itemType": "KQLDatabase",
+      "part": "DatabaseProperties.json",
+      "test": [
+        {
+          "filter": [
+            [
+              {
+                "name": "databaseRetention",
+                "value": {
+                  "coalesce": [
+                    { "var": "databaseRetention" },
+                    { "var": "retentionPolicy" }
+                  ]
+                }
+              },
+              {
+                "name": "databaseCache",
+                "value": {
+                  "coalesce": [
+                    { "var": "databaseCache" },
+                    { "var": "cachePolicy" }
+                  ]
+                }
+              }
+            ],
+            {
+              "isnullorempty": [
+                { "var": "value" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

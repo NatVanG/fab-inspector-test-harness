@@ -1,0 +1,20 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_PIPELINE_MISSING_DESCRIPTION",
+      "name": "Pipeline Missing Description",
+      "description": "Asserts that properties.description is not null or empty.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "!": [
+            { "isnullorempty": [ { "var": "properties.description" } ] }
+          ]
+        },
+        true
+      ]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_ITEM_DISPLAYNAME_PREFIX_BY_TYPE",
+      "name": "Item Display Name Prefix Matches Item Type",
+      "description": "Returns item display names where the type-specific prefix does not match the approved convention map.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items"
+                ]
+              },
+              "items": {
+                "query": [ { "var": "response" }, { "path": "$.value[*]" } ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "items" },
+                    {
+                      "!": [
+                        {
+                          "or": [
+                            { "and": [ { "==": [ { "var": "type" }, "Lakehouse" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^LH_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Warehouse" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^WH_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Notebook" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^NB_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "DataPipeline" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^PL_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "CopyJob" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^CJ_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Dataflow" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^DF_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "SemanticModel" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^SM_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Report" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^RPT_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Eventstream" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^ES_" ] } ] }, 0 ] } ] },
+                            { "and": [ { "==": [ { "var": "type" }, "Reflex" ] }, { ">": [ { "count": [ { "regexextract": [ { "var": "displayName" }, "^ACT_" ] } ] }, 0 ] } ] }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                { "var": "displayName" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

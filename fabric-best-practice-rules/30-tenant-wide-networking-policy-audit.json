@@ -1,0 +1,47 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "ADMIN_TENANT_NETWORKING_POLICY_AUDIT",
+      "name": "Tenant-Wide Networking Policy Audit",
+      "description": "Calls admin networking communication policies and returns workspace IDs where inbound or outbound defaultAction is Allow.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/admin/workspaces/networkingCommunicationPolicies"
+                ]
+              },
+              "policies": {
+                "query": [
+                  { "var": "response" },
+                  { "path": "$.value[*]" }
+                ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "policies" },
+                    {
+                      "or": [
+                        { "==": [ { "var": "inbound.publicAccessRules.defaultAction" }, "Allow" ] },
+                        { "==": [ { "var": "outbound.publicAccessRules.defaultAction" }, "Allow" ] }
+                      ]
+                    }
+                  ]
+                },
+                { "var": "workspaceId" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

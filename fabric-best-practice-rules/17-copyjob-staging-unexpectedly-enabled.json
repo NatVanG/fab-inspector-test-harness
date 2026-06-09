@@ -1,0 +1,37 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "COPYJOB_STAGING_UNEXPECTEDLY_ENABLED",
+      "name": "CopyJob Staging Unexpectedly Enabled",
+      "description": "Returns activity names where enableStaging is true.",
+      "itemType": "CopyJob",
+      "part": "copyjob-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "var": "activities"
+                },
+                {
+                  "==": [
+                    {
+                      "var": "enableStaging"
+                    },
+                    true
+                  ]
+                }
+              ]
+            },
+            {
+              "var": "name"
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

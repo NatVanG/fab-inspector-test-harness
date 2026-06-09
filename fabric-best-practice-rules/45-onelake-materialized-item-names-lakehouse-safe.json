@@ -1,0 +1,43 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_ONELAKE_ITEM_NAMES_LAKEHOUSE_SAFE",
+      "name": "Item Display Names Must Be Lakehouse-Safe Identifiers",
+      "description": "Returns names of OneLake materialized item types whose displayName fails Lakehouse-safe naming regex.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": { "apiget": [ "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items" ] },
+              "items": { "query": [ { "var": "response" }, { "path": "$.value[*]" } ] }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "items" },
+                    {
+                      "and": [
+                        { "in": [ { "var": "type" }, ["Lakehouse", "Warehouse", "KQLDatabase", "SQLDatabase", "MirroredDatabase"] ] },
+                        {
+                          "==": [
+                            { "count": [ { "regexextract": [ { "var": "displayName" }, "^[A-Za-z][A-Za-z0-9_]{0,122}$" ] } ] },
+                            0
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                { "var": "displayName" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

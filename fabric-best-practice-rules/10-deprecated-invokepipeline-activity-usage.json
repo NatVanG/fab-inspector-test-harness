@@ -1,0 +1,37 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_DEPRECATED_INVOKEPIPELINE_USAGE",
+      "name": "Deprecated InvokePipeline Activity Usage",
+      "description": "Returns activity names using deprecated type InvokePipeline.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "var": "properties.activities"
+                },
+                {
+                  "==": [
+                    {
+                      "var": "type"
+                    },
+                    "InvokePipeline"
+                  ]
+                }
+              ]
+            },
+            {
+              "var": "name"
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_OUTBOUND_PUBLIC_ACCESS_MUST_BE_DENIED_FOR_DE",
+      "name": "Outbound Public Access Must Be Denied for Data Engineering Workspaces",
+      "description": "If the workspace contains Notebook, Lakehouse, or SparkJobDefinition items, returns a marker when outbound defaultAction is not Deny.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "itemsResponse": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items"
+                ]
+              },
+              "policy": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/networking/communicationPolicy"
+                ]
+              },
+              "items": {
+                "query": [
+                  { "var": "itemsResponse" },
+                  { "path": "$.value[*]" }
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "and": [
+                    {
+                      ">": [
+                        {
+                          "count": [
+                            {
+                              "filter": [
+                                { "var": "items" },
+                                {
+                                  "in": [
+                                    { "var": "type" },
+                                    ["Notebook", "Lakehouse", "SparkJobDefinition"]
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    },
+                    {
+                      "!=": [
+                        {
+                          "query": [
+                            { "var": "policy" },
+                            { "var": "outbound.publicAccessRules.defaultAction" }
+                          ]
+                        },
+                        "Deny"
+                      ]
+                    }
+                  ]
+                },
+                ["OUTBOUND_DEFAULT_NOT_DENY_FOR_DE_WORKSPACE"],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

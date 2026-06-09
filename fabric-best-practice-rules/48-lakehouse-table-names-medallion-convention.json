@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "LAKEHOUSE_TABLE_NAMES_MEDALLION_CONVENTION",
+      "name": "Lakehouse Table Names Must Follow Medallion Convention",
+      "description": "Returns table names that do not follow bronze/silver/gold schema or prefix naming.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT TABLE_SCHEMA + '.' + TABLE_NAME AS TableName FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND LOWER(TABLE_SCHEMA) NOT IN ('bronze','silver','gold') AND LOWER(TABLE_NAME) NOT LIKE 'bronze[_]%' AND LOWER(TABLE_NAME) NOT LIKE 'silver[_]%' AND LOWER(TABLE_NAME) NOT LIKE 'gold[_]%'",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

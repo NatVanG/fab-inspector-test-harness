@@ -1,0 +1,59 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "COPYJOB_CDC_MISSING_UPSERT_KEYS",
+      "name": "CDC Mode Activities Missing Upsert Keys",
+      "description": "In CDC mode, returns activity names where destination.upsertSettings.keys is missing or empty.",
+      "itemType": "CopyJob",
+      "part": "copyjob-content.json",
+      "test": [
+        {
+          "if": [
+            {
+              "==": [
+                {
+                  "var": "properties.jobMode"
+                },
+                "CDC"
+              ]
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    {
+                      "var": "activities"
+                    },
+                    {
+                      "==": [
+                        {
+                          "count": [
+                            {
+                              "coalesce": [
+                                {
+                                  "var": "destination.upsertSettings.keys"
+                                },
+                                []
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "var": "name"
+                }
+              ]
+            },
+            []
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

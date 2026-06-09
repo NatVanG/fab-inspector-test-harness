@@ -1,0 +1,44 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "SEMANTICMODEL_RELATIONSHIPS_USE_INTEGER_KEYS",
+      "name": "Semantic Model Must Use Integer Keys in Relationships",
+      "description": "Returns relationship names where model annotations explicitly mark keyType as string.",
+      "itemType": "SemanticModel",
+      "part": "model.bim",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "path": "$..relationships[*]"
+                },
+                {
+                  "==": [
+                    {
+                      "coalesce": [
+                        { "var": "keyType" },
+                        { "var": "annotations.keyType" },
+                        "integer"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              ]
+            },
+            {
+              "coalesce": [
+                { "var": "name" },
+                { "var": "fromTable" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

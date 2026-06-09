@@ -1,0 +1,18 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "COPYJOB_MISSING_RETRY_COUNT",
+      "name": "CopyJob Missing Retry Count",
+      "description": "Asserts CopyJob properties.policy.retry is set to at least 1.",
+      "itemType": "CopyJob",
+      "part": "copyjob-content.json",
+      "test": [
+        {
+          ">=": [ { "var": "properties.policy.retry" }, 1 ]
+        },
+        true
+      ]
+    }
+  ]
+}

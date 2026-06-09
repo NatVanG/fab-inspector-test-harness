@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "WAREHOUSE_SENSITIVE_COLUMNS_REQUIRE_MASKING",
+      "name": "Sensitive Columns Must Have Dynamic Data Masking",
+      "description": "Returns sensitive column names not masked according to keyword pattern.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT c.name FROM sys.columns c LEFT JOIN sys.masked_columns mc ON c.object_id = mc.object_id AND c.column_id = mc.column_id WHERE (LOWER(c.name) LIKE '%email%' OR LOWER(c.name) LIKE '%ssn%' OR LOWER(c.name) LIKE '%salary%' OR LOWER(c.name) LIKE '%phone%' OR LOWER(c.name) LIKE '%dob%' OR LOWER(c.name) LIKE '%creditcard%') AND ISNULL(mc.is_masked,0)=0",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

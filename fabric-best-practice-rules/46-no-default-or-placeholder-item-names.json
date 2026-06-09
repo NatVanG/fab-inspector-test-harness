@@ -1,0 +1,47 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_NO_DEFAULT_OR_PLACEHOLDER_ITEM_NAMES",
+      "name": "No Default or Placeholder Names",
+      "description": "Returns item display names that match default/placeholder naming patterns.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": { "apiget": [ "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items" ] },
+              "items": { "query": [ { "var": "response" }, { "path": "$.value[*]" } ] }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "items" },
+                    {
+                      ">": [
+                        {
+                          "count": [
+                            {
+                              "regexextract": [
+                                { "var": "displayName" },
+                                "(?i)^(Untitled|New|Copy of |Lakehouse\\d*|Notebook\\d*|Pipeline\\d*|Test\\d*|Temp\\d*|TBD)$"
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                { "var": "displayName" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

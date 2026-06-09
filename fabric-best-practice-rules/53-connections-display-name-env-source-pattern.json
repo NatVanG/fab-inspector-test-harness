@@ -1,0 +1,53 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_CONNECTION_DISPLAYNAME_ENV_SOURCE_PATTERN",
+      "name": "Connection Display Names Must Embed Environment and Source Type",
+      "description": "Returns connection display names that do not match ENV_Source_Name pattern.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/connections"
+                ]
+              },
+              "connections": {
+                "query": [ { "var": "response" }, { "path": "$.value[*]" } ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "connections" },
+                    {
+                      "==": [
+                        {
+                          "count": [
+                            {
+                              "regexextract": [
+                                { "var": "displayName" },
+                                "^(DEV|TEST|PROD)_[A-Z][A-Za-z0-9]+_[A-Za-z0-9_-]+$"
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                { "var": "displayName" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

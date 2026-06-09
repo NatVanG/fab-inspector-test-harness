@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "LAKEHOUSE_SCHEMA_NAMES_SNAKE_CASE",
+      "name": "Lakehouse Schema Names Must Be Snake-Case Identifiers",
+      "description": "Returns schema names that are not lower snake_case from INFORMATION_SCHEMA.SCHEMATA.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT SCHEMA_NAME AS SchemaName FROM INFORMATION_SCHEMA.SCHEMATA WHERE LOWER(SCHEMA_NAME) NOT IN ('dbo','information_schema') AND SCHEMA_NAME NOT LIKE '[a-z]%' OR PATINDEX('%[^a-z0-9_]%', SCHEMA_NAME) > 0",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

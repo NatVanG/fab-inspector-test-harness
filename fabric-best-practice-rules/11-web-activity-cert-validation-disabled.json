@@ -1,0 +1,52 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_WEB_ACTIVITY_CERT_VALIDATION_DISABLED",
+      "name": "Web Activity Certificate Validation Disabled",
+      "description": "Returns WebActivity or WebHook activity names where disableCertValidation is true.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "var": "properties.activities"
+                },
+                {
+                  "and": [
+                    {
+                      "in": [
+                        {
+                          "var": "type"
+                        },
+                        [
+                          "WebActivity",
+                          "WebHook"
+                        ]
+                      ]
+                    },
+                    {
+                      "==": [
+                        {
+                          "var": "typeProperties.disableCertValidation"
+                        },
+                        true
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "var": "name"
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

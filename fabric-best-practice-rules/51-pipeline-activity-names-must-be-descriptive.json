@@ -1,0 +1,46 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_ACTIVITY_NAMES_MUST_BE_DESCRIPTIVE",
+      "name": "Data Pipeline Activity Names Must Be Descriptive",
+      "description": "Returns activity names that match default Fabric naming patterns.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "var": "properties.activities"
+                },
+                {
+                  ">": [
+                    {
+                      "count": [
+                        {
+                          "regexextract": [
+                            {
+                              "var": "name"
+                            },
+                            "(?i)^(Copy data\\d*|Activity\\d*|Untitled\\d*|Notebook\\d*|Script\\d*)$"
+                          ]
+                        }
+                      ]
+                    },
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "var": "name"
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

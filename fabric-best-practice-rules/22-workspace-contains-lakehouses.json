@@ -1,0 +1,53 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_WORKSPACE_CONTAINS_LAKEHOUSES",
+      "name": "Workspace Contains Lakehouses",
+      "description": "Returns a marker when the workspace has zero Lakehouse items.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items?type=Lakehouse"
+                ]
+              },
+              "items": {
+                "query": [
+                  {
+                    "var": "response"
+                  },
+                  {
+                    "path": "$.value[*]"
+                  }
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "==": [
+                    {
+                      "count": [
+                        {
+                          "var": "items"
+                        }
+                      ]
+                    },
+                    0
+                  ]
+                },
+                ["NO_LAKEHOUSE_FOUND"],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -747,6 +747,58 @@ With all metadata options:
 
 Parameters: workspace ID, lineage, datasource details, dataset schema, expressions, users.
 
+#### `sqlquery`
+Executes a read-only T-SQL query against a Lakehouse SQL endpoint and returns parsed JSON.
+
+How it works:
+- Resolves the Lakehouse metadata via Fabric REST API:
+  - `GET /v1/workspaces/{workspaceId}/lakehouses/{lakehouseId}`
+- Reads the SQL endpoint connection string from `properties.sqlEndpointProperties.connectionString`.
+- Executes the query over SQL with Entra token scope `https://database.windows.net/.default`.
+- Expects JSON output; if `FOR JSON` is not present, Fab Inspector appends `FOR JSON PATH` automatically.
+
+Supported forms:
+
+```json
+{ "sqlquery": "SELECT COUNT(*) AS CityCount FROM [dbo].[dimension_city]" }
+```
+
+Array form: `[query, workspaceId, fabricItem, refreshMetadata, recreateTables]`
+
+```json
+{
+  "sqlquery": [
+    "SELECT COUNT(*) AS CityCount FROM [dbo].[dimension_city]",
+    "{context-fabricworkspace}",
+    "{context-fabricitem}",
+    true,
+    true
+  ]
+}
+```
+
+Parameter behavior:
+- `query` (required): T-SQL query expression.
+- `workspaceId` (optional): defaults to `{context-fabricworkspace}`.
+- `fabricItem` (optional): defaults to `{context-fabricitem}` and must resolve to a **Lakehouse ID**.
+- `refreshMetadata` (optional bool): defaults to `false`. If `true`, invokes SQL endpoint metadata refresh before executing query.
+- `recreateTables` (optional bool): defaults to `false`. Used only when `refreshMetadata=true`.
+
+Query restrictions enforced by implementation:
+- Must start with `SELECT` or `WITH`.
+- Must be a single statement (no semicolons).
+- SQL comments are not allowed (`--`, `/*`, `*/`).
+- Schema-changing keywords are blocked (`CREATE`, `ALTER`, `DROP`).
+
+Failure modes to be aware of when authoring rules:
+- Non-JSON SQL output fails parsing.
+- Invalid/non-GUID workspace or item IDs fail validation.
+- Fabric item that is not a Lakehouse ID fails validation.
+- SQL endpoint metadata/read failures surface HTTP errors.
+- SQL execution errors surface as operator failures.
+
+
+
 ## 6 — Item types
 
 | `itemType` value | Description |

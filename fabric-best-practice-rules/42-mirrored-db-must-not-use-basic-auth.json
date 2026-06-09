@@ -1,0 +1,27 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "MIRROREDDB_MUST_NOT_USE_BASIC_AUTH",
+      "name": "Mirrored Database Connection Must Not Use Basic Authentication",
+      "description": "Returns a marker when credentialType indicates basic authentication.",
+      "itemType": "MirroredDatabase",
+      "part": "mirroring.json",
+      "test": [
+        {
+          "if": [
+            {
+              "or": [
+                { "==": [ { "var": "credentialType" }, "Basic" ] },
+                { "==": [ { "var": "connection.credentialType" }, "Basic" ] }
+              ]
+            },
+            ["BASIC_AUTH_USED"],
+            []
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

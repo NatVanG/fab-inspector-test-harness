@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "WAREHOUSE_OBJECT_NAMES_APPROVED_PATTERN",
+      "name": "Warehouse Object Names Must Use Approved Pattern",
+      "description": "Returns object names violating schema/table/view/procedure naming conventions.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT s.name + '.' + o.name AS ObjectName FROM sys.objects o INNER JOIN sys.schemas s ON o.schema_id=s.schema_id WHERE (o.type='U' AND o.name NOT LIKE 'dim[_]%' AND o.name NOT LIKE 'fact[_]%' AND o.name NOT LIKE 'bridge[_]%' AND o.name NOT LIKE 'stg[_]%') OR (o.type='V' AND o.name NOT LIKE 'v[_]%' AND o.name NOT LIKE 'vw[_]%') OR (o.type='P' AND o.name NOT LIKE 'usp[_]%')",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_ACTIVITIES_MISSING_RETRY_POLICY",
+      "name": "Activities Missing Retry Policy",
+      "description": "Returns Copy, TridentNotebook, and SparkJobDefinition activities where policy.retry is missing or 0.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                { "path": "$.properties.activities[*]" },
+                {
+                  "and": [
+                    { "in": [ { "var": "type" }, ["Copy", "TridentNotebook", "SparkJobDefinition"] ] },
+                    {
+                      "or": [
+                        { "isnullorempty": [ { "var": "policy.retry" } ] },
+                        { "==": [ { "var": "policy.retry" }, 0 ] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            { "var": "name" }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

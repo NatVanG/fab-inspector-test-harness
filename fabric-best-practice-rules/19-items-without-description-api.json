@@ -1,0 +1,56 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_ITEMS_WITHOUT_DESCRIPTION",
+      "name": "Items Without a Description",
+      "description": "Calls the workspace items API and returns display names where description is null or empty.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items"
+                ]
+              },
+              "items": {
+                "query": [
+                  {
+                    "var": "response"
+                  },
+                  {
+                    "path": "$.value[*]"
+                  }
+                ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    {
+                      "var": "items"
+                    },
+                    {
+                      "isnullorempty": [
+                        {
+                          "var": "description"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "var": "displayName"
+                }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

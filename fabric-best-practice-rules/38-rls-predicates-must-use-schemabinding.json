@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "WAREHOUSE_RLS_PREDICATES_REQUIRE_SCHEMABINDING",
+      "name": "Row-Level Security Predicates Must Use SCHEMABINDING",
+      "description": "Returns security policy names where is_schema_bound = 0.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT name FROM sys.security_policies WHERE is_schema_bound = 0",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_WORKSPACE_NAME_APPROVED_PATTERN",
+      "name": "Workspace Name Must Follow Approved Pattern",
+      "description": "Returns workspace display names that include banned words, invalid environment suffix, or exceed length threshold.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "workspace": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}"
+                ]
+              },
+              "name": {
+                "query": [
+                  {
+                    "apiget": [
+                      "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}"
+                    ]
+                  },
+                  { "var": "displayName" }
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "or": [
+                    {
+                      ">": [
+                        {
+                          "count": [
+                            {
+                              "regexextract": [
+                                { "var": "name" },
+                                "(?i)(workspace|fabric|power\\s*bi)"
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "==": [
+                            {
+                              "count": [
+                                {
+                                  "regexextract": [
+                                    { "var": "name" },
+                                    "\\[(Dev|Test)\\]$"
+                                  ]
+                                }
+                              ]
+                            },
+                            0
+                          ]
+                        },
+                        {
+                          ">": [
+                            {
+                              "count": [
+                                {
+                                  "regexextract": [
+                                    { "var": "name" },
+                                    "\\["
+                                  ]
+                                }
+                              ]
+                            },
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    { ">": [ { "count": [ { "strsplit": [ { "var": "name" }, "" ] } ] }, 60 ] }
+                  ]
+                },
+                [ { "var": "name" } ],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

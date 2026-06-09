@@ -1,0 +1,28 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "EVENTSTREAM_RETENTION_EXPLICITLY_CONFIGURED",
+      "name": "Eventstream Retention Explicitly Configured",
+      "description": "Returns a marker when retentionInDays is missing or outside [1, 90].",
+      "itemType": "Eventstream",
+      "part": "eventstream.json",
+      "test": [
+        {
+          "if": [
+            {
+              "or": [
+                { "isnullorempty": [ { "var": "properties.retentionInDays" } ] },
+                { "<": [ { "var": "properties.retentionInDays" }, 1 ] },
+                { ">": [ { "var": "properties.retentionInDays" }, 90 ] }
+              ]
+            },
+            ["EVENTSTREAM_RETENTION_INVALID"],
+            []
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_ONELAKE_WORKSPACE_STORAGE_SETTINGS_AUDIT",
+      "name": "OneLake Workspace Storage Settings Audit",
+      "description": "Calls OneLake settings and returns missing expected top-level properties.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "settings": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/onelake/settings"
+                ]
+              }
+            },
+            {
+              "diff": [
+                ["softDelete", "retention", "shortcuts"],
+                {
+                  "keys": [
+                    {
+                      "var": "settings"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

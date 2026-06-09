@@ -1,0 +1,56 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "NOTEBOOK_DELTA_WRITES_REQUIRE_OPTIMIZEWRITE",
+      "name": "Notebook Writing Delta Tables Must Set Optimize-Write",
+      "description": "Returns notebook file name when Delta write patterns exist but optimizeWrite enablement is absent.",
+      "itemType": "Notebook",
+      "part": "notebook-content.py",
+      "test": [
+        {
+          "let": [
+            {
+              "pathInfo": { "partinfo": "" },
+              "deltaWrites": {
+                "filetextsearchcount": [
+                  {
+                    "query": [
+                      { "partinfo": "" },
+                      { "var": "filesystempath" }
+                    ]
+                  },
+                  "(?i)(\\.write\\.format\\(\\s*['\"]delta['\"]\\s*\\)|saveAsTable\\s*\\()"
+                ]
+              },
+              "optimizeWrite": {
+                "filetextsearchcount": [
+                  {
+                    "query": [
+                      { "partinfo": "" },
+                      { "var": "filesystempath" }
+                    ]
+                  },
+                  "(?i)(spark\\.microsoft\\.delta\\.optimizeWrite\\.enabled\\s*['\"]?[,=]\\s*['\"]?true|set\\s+spark\\.microsoft\\.delta\\.optimizeWrite\\.enabled\\s*=\\s*true)"
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "and": [
+                    { ">": [ { "var": "deltaWrites" }, 0 ] },
+                    { "==": [ { "var": "optimizeWrite" }, 0 ] }
+                  ]
+                },
+                [ { "var": "pathInfo.filesystemname" } ],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

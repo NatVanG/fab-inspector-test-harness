@@ -6,3 +6,5 @@
 
 # optionally keep one placeholder file so Git can keep the empty folder
 !/fab-inspector-rules/.keep
+
+fabric-best-practice-rules/run-rule.ps1

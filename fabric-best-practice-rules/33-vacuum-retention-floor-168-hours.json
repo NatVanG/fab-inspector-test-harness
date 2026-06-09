@@ -1,0 +1,40 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "NOTEBOOK_VACUUM_RETENTION_FLOOR",
+      "name": "Lakehouse Table Maintenance VACUUM Retention Floor",
+      "description": "Returns notebook file name when VACUUM RETAIN uses retention below 168 hours.",
+      "itemType": "Notebook",
+      "part": "notebook-content.py",
+      "test": [
+        {
+          "let": [
+            {
+              "pathInfo": { "partinfo": "" },
+              "badVacuum": {
+                "filetextsearchcount": [
+                  {
+                    "query": [
+                      { "partinfo": "" },
+                      { "var": "filesystempath" }
+                    ]
+                  },
+                  "(?i)VACUUM\\s+.+?RETAIN\\s+(?:[0-9]|[1-9][0-9]|1[0-5][0-9]|16[0-7])\\s+HOURS"
+                ]
+              }
+            },
+            {
+              "if": [
+                { ">": [ { "var": "badVacuum" }, 0 ] },
+                [ { "var": "pathInfo.filesystemname" } ],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

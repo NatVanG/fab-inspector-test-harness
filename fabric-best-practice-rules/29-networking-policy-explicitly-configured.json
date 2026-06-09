@@ -1,0 +1,54 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_NETWORKING_POLICY_EXPLICITLY_CONFIGURED",
+      "name": "Workspace Networking Policy Is Explicitly Configured",
+      "description": "Returns markers when inbound or outbound defaultAction is missing.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "policy": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/networking/communicationPolicy"
+                ]
+              }
+            },
+            {
+              "filter": [
+                [
+                  {
+                    "name": "inbound.publicAccessRules.defaultAction",
+                    "value": {
+                      "query": [
+                        { "var": "policy" },
+                        { "var": "inbound.publicAccessRules.defaultAction" }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "outbound.publicAccessRules.defaultAction",
+                    "value": {
+                      "query": [
+                        { "var": "policy" },
+                        { "var": "outbound.publicAccessRules.defaultAction" }
+                      ]
+                    }
+                  }
+                ],
+                {
+                  "isnullorempty": [
+                    { "var": "value" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

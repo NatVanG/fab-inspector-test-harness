@@ -1,0 +1,39 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "SEMANTICMODEL_DIRECTLAKE_HIGH_CARDINALITY_PARTITIONS",
+      "name": "Direct Lake Tables Must Not Partition on High-Cardinality Columns",
+      "description": "Uses optional model metadata hints and returns partition columns explicitly marked with highCardinality=true.",
+      "itemType": "SemanticModel",
+      "part": "model.bim",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "path": "$..partitions[*]"
+                },
+                {
+                  "==": [
+                    { "var": "highCardinality" },
+                    true
+                  ]
+                }
+              ]
+            },
+            {
+              "coalesce": [
+                { "var": "source.column" },
+                { "var": "name" },
+                "UNKNOWN_PARTITION"
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

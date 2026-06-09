@@ -1,0 +1,37 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "DP_FOREACH_UNCONSTRAINED_BATCHCOUNT",
+      "name": "ForEach Unconstrained Batch Count",
+      "description": "Returns ForEach activity names where isSequential=false and batchCount is missing or > 50.",
+      "itemType": "DataPipeline",
+      "part": "pipeline-content.json",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                { "path": "$.properties.activities[*]" },
+                {
+                  "and": [
+                    { "==": [ { "var": "type" }, "ForEach" ] },
+                    { "==": [ { "var": "typeProperties.isSequential" }, false ] },
+                    {
+                      "or": [
+                        { "isnullorempty": [ { "var": "typeProperties.batchCount" } ] },
+                        { ">": [ { "var": "typeProperties.batchCount" }, 50 ] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            { "var": "name" }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

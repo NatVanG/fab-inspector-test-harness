@@ -1,0 +1,55 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "NOTEBOOK_FILE_NAME_MATCHES_DISPLAY_NAME",
+      "name": "Notebook File Names Must Match Item Display Name",
+      "description": "Returns notebook file name when normalized file stem does not align to normalized displayName from .platform metadata.",
+      "itemType": "Notebook",
+      "part": "notebook-content.py",
+      "test": [
+        {
+          "let": [
+            {
+              "finfo": { "partinfo": "" },
+              "displayName": {
+                "query": [
+                  { "part": ".platform" },
+                  { "var": "metadata.displayName" }
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "==": [
+                    {
+                      "count": [
+                        {
+                          "regexextract": [
+                            {
+                              "var": "finfo.filesystemname"
+                            },
+                            "(?i)^notebook-content\\.py$"
+                          ]
+                        }
+                      ]
+                    },
+                    1
+                  ]
+                },
+                [],
+                [
+                  {
+                    "var": "finfo.filesystemname"
+                  }
+                ]
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

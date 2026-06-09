@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/NatVanG/fab-inspector/blob/main/fab-inspector-jsonlogic.schema.json",
   "title": "Fab Inspector Extended JSONLogic Rule",
-  "description": "Schema for JSONLogic expressions used in Fab Inspector, covering 34 native operators, 5 FabInspector.Operators, and 31 Ric.Operators.",
+  "description": "Schema for JSONLogic expressions used in Fab Inspector, covering 34 native operators, 6 FabInspector.Operators, and 31 Ric.Operators.",
   "oneOf": [
     { "$ref": "#/$defs/literal" },
     { "$ref": "#/$defs/ruleObject" }
@@ -223,6 +223,18 @@
         },
         "daxquery": {
           "description": "[FabInspector] Execute a DAX query against a Fabric Semantic Model. Args: [daxQuery, workspaceId?, semanticModelId?, includeNulls?, impersonatedUserName?].",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/rule" },
+              "minItems": 1,
+              "maxItems": 5
+            }
+          ]
+        },
+        "sqlquery": {
+          "description": "[FabInspector] Execute a SQL query against a Fabric Warehouse/SQL endpoint. Args: [sqlQuery, workspaceId?, itemId?, includeNulls?, includeColumnNames?].",
           "oneOf": [
             { "type": "string" },
             {

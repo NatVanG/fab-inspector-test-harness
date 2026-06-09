@@ -1,0 +1,66 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_ITEM_NAMING_CONVENTION_COMPLIANCE",
+      "name": "Item Naming Convention Compliance",
+      "description": "Returns item display names that do not start with one of the approved domain prefixes.",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/items"
+                ]
+              },
+              "items": {
+                "query": [
+                  {
+                    "var": "response"
+                  },
+                  {
+                    "path": "$.value[*]"
+                  }
+                ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    {
+                      "var": "items"
+                    },
+                    {
+                      "==": [
+                        {
+                          "count": [
+                            {
+                              "regexextract": [
+                                {
+                                  "var": "displayName"
+                                },
+                                "^(FIN|HR|OPS)_"
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "var": "displayName"
+                }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

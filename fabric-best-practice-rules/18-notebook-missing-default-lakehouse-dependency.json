@@ -1,0 +1,57 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "NOTEBOOK_MISSING_DEFAULT_LAKEHOUSE_DEPENDENCY",
+      "name": "Notebook Missing Default Lakehouse Dependency",
+      "description": "Returns the notebook file when no default Lakehouse dependency pattern is found in the metadata block.",
+      "itemType": "Notebook",
+      "part": "notebook-content.py",
+      "test": [
+        {
+          "let": [
+            {
+              "pinfo": {
+                "partinfo": ""
+              },
+              "matches": {
+                "filetextsearchcount": [
+                  {
+                    "query": [
+                      {
+                        "partinfo": ""
+                      },
+                      {
+                        "var": "filesystempath"
+                      }
+                    ]
+                  },
+                  "(?is)#\\s*META[\\s\\S]*dependencies[\\s\\S]*(lakehouse|defaultLakehouse|default_lakehouse)"
+                ]
+              }
+            },
+            {
+              "if": [
+                {
+                  "==": [
+                    {
+                      "var": "matches"
+                    },
+                    0
+                  ]
+                },
+                [
+                  {
+                    "var": "pinfo.filesystemname"
+                  }
+                ],
+                []
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

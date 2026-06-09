@@ -1,0 +1,23 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "WAREHOUSE_RLS_POLICY_MUST_BE_ENABLED",
+      "name": "Row-Level Security Policy Must Be Enabled",
+      "description": "Returns disabled security policy names from sys.security_policies.",
+      "itemType": "none",
+      "test": [
+        {
+          "sqlquery": [
+            "SELECT name FROM sys.security_policies WHERE is_enabled = 0",
+            "{context-fabricworkspace}",
+            "{context-fabricitem}",
+            true,
+            true
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

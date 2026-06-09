@@ -1,0 +1,56 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "API_IP_FIREWALL_NO_BROAD_CIDR",
+      "name": "IP Firewall Rules Must Not Contain Wildcard or Broad CIDR Ranges",
+      "description": "Returns firewall rule values matching 0.0.0.0/0 or very broad CIDR ranges (/0, /8, /12).",
+      "itemType": "none",
+      "test": [
+        {
+          "let": [
+            {
+              "response": {
+                "apiget": [
+                  "https://api.fabric.microsoft.com/v1/workspaces/{context-fabricworkspace}/networking/communicationpolicy/inbound/firewall"
+                ]
+              },
+              "rules": {
+                "query": [
+                  { "var": "response" },
+                  { "path": "$.rules[*]" }
+                ]
+              }
+            },
+            {
+              "map": [
+                {
+                  "filter": [
+                    { "var": "rules" },
+                    {
+                      ">": [
+                        {
+                          "count": [
+                            {
+                              "regexextract": [
+                                { "var": "value" },
+                                "^(0\\.0\\.0\\.0/0|.*\\/(0|8|12))$"
+                              ]
+                            }
+                          ]
+                        },
+                        0
+                      ]
+                    }
+                  ]
+                },
+                { "var": "value" }
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}
