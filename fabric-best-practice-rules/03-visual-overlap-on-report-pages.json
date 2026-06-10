@@ -1,0 +1,125 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_VISUAL_OVERLAP_PAIRS",
+      "name": "Visual Overlap on Report Pages",
+      "description": "Checks each visible page for overlapping visual rectangles and returns overlapping visual pairs. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "Pages",
+      "test": [
+        {
+          "if": [
+            {
+              "or": [
+                {
+                  "in": [
+                    {
+                      "var": "visibility"
+                    },
+                    [
+                      "Hidden",
+                      "HiddenInViewMode"
+                    ]
+                  ]
+                },
+                {
+                  "==": [
+                    {
+                      "var": "isHidden"
+                    },
+                    true
+                  ]
+                },
+                {
+                  "==": [
+                    {
+                      "var": "hidden"
+                    },
+                    true
+                  ]
+                }
+              ]
+            },
+            [],
+            {
+              "rectoverlap": [
+                {
+                  "map": [
+                    {
+                      "filter": [
+                        {
+                          "part": "Visuals"
+                        },
+                        {
+                          "and": [
+                            {
+                              "!!": [
+                                {
+                                  "var": "name"
+                                }
+                              ]
+                            },
+                            {
+                              ">": [
+                                {
+                                  "var": "position.width"
+                                },
+                                0
+                              ]
+                            },
+                            {
+                              ">": [
+                                {
+                                  "var": "position.height"
+                                },
+                                0
+                              ]
+                            },
+                            {
+                              "!": [
+                                {
+                                  "var": "isHidden"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "torecord": [
+                        "name",
+                        {
+                          "var": "name"
+                        },
+                        "x",
+                        {
+                          "var": "position.x"
+                        },
+                        "y",
+                        {
+                          "var": "position.y"
+                        },
+                        "width",
+                        {
+                          "var": "position.width"
+                        },
+                        "height",
+                        {
+                          "var": "position.height"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                0
+              ]
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

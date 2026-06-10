@@ -1,0 +1,45 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_DEFAULT_PAGE_NAMES_DETECTED",
+      "name": "Default Page Names Detected",
+      "description": "Returns report page display names that still match default naming like 'Page 1'. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "test": [
+        {
+          "map": [
+            {
+              "filter": [
+                {
+                  "part": "Pages"
+                },
+                {
+                  ">": [
+                    {
+                      "count": [
+                        {
+                          "regexextract": [
+                            {
+                              "var": "displayName"
+                            },
+                            "(?i)^Page\\s+\\d+$"
+                          ]
+                        }
+                      ]
+                    },
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "var": "displayName"
+            }
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

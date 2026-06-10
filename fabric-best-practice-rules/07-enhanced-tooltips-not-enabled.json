@@ -1,0 +1,38 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_ENHANCED_TOOLTIPS_NOT_ENABLED",
+      "name": "Enhanced Tooltips Not Enabled",
+      "description": "Returns a marker when settings.useEnhancedTooltips is not true. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "Report",
+      "test": [
+        {
+          "if": [
+            {
+              "==": [
+                {
+                  "var": "settings.useEnhancedTooltips"
+                },
+                true
+              ]
+            },
+            [],
+            [
+              {
+                "torecord": [
+                  "useEnhancedTooltips",
+                  {
+                    "var": "settings.useEnhancedTooltips"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

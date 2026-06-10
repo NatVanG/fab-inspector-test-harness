@@ -1,0 +1,39 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_SEMANTIC_MODEL_BINDING_PORTABILITY",
+      "name": "Report Semantic Model Binding Portability",
+      "description": "Returns a marker when the report binding uses datasetReference.byConnection instead of datasetReference.byPath. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "definition.pbir",
+      "test": [
+        {
+          "if": [
+            {
+              "!": [
+                {
+                  "isnullorempty": [
+                    {
+                      "var": "datasetReference.byPath.path"
+                    }
+                  ]
+                }
+              ]
+            },
+            [],
+            [
+              {
+                "torecord": [
+                  "datasetReferenceMode",
+                  "byConnection"
+                ]
+              }
+            ]
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_CROSS_HIGHLIGHT_DISABLED_FOR_SLOW_SOURCES",
+      "name": "Cross-Highlight Not Disabled for Slow Sources",
+      "description": "Returns a marker when slowDataSourceSettings.isCrossHighlightingDisabled is true. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "Report",
+      "test": [
+        {
+          "if": [
+            {
+              "==": [
+                {
+                  "var": "slowDataSourceSettings.isCrossHighlightingDisabled"
+                },
+                true
+              ]
+            },
+            [
+              {
+                "torecord": [
+                  "isCrossHighlightingDisabled",
+                  true
+                ]
+              }
+            ],
+            []
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

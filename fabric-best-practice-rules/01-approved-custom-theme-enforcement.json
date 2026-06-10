@@ -1,0 +1,62 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_APPROVED_CUSTOM_THEME_ENFORCEMENT",
+      "name": "Approved Custom Theme Enforcement",
+      "description": "Returns the detected custom theme name when it is missing or not in the approved allowlist. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "Report",
+      "test": [
+        {
+          "if": [
+            {
+              "and": [
+                {
+                  "!": [
+                    {
+                      "isnullorempty": [
+                        {
+                          "var": "themeCollection.customTheme.name"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "in": [
+                    {
+                      "var": "themeCollection.customTheme.name"
+                    },
+                    {
+                      "var": "approvedThemeNames"
+                    }
+                  ]
+                }
+              ]
+            },
+            [],
+            [
+              {
+                "torecord": [
+                  "detectedThemeName",
+                  {
+                    "var": "themeCollection.customTheme.name"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "approvedThemeNames": [
+            "Corporate Theme",
+            "Contoso Standard",
+            "Executive Theme"
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

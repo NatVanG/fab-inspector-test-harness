@@ -1,0 +1,52 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_UNAPPROVED_CUSTOM_VISUALS",
+      "name": "Unapproved Custom Visuals",
+      "description": "Returns custom visual type IDs that are not in the approved allowlist. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "part": "Report",
+      "test": [
+        {
+          "if": [
+            {
+              "isnullorempty": [
+                {
+                  "var": "publicCustomVisuals"
+                }
+              ]
+            },
+            [],
+            {
+              "filter": [
+                {
+                  "var": "publicCustomVisuals"
+                },
+                {
+                  "!": {
+                    "in": [
+                      {
+                        "var": ""
+                      },
+                      {
+                        "var": "approvedVisualTypeIds"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "approvedVisualTypeIds": [
+            "MicrosoftPowerBIMockupVisual",
+            "myCompanyApprovedVisual"
+          ]
+        },
+        []
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "../.ai-assets/RuleSchemas/fab-inspector-rules.schema.json",
+  "rules": [
+    {
+      "id": "REPORT_EXCESSIVE_PAGE_COUNT",
+      "name": "Excessive Page Count",
+      "description": "Returns page count details when the report exceeds the configured maximum number of pages. WARNING: This rule was AI-generated and is untested.",
+      "itemType": "Report",
+      "test": [
+        {
+          "if": [
+            {
+              ">": [
+                {
+                  "count": [
+                    {
+                      "part": "Pages"
+                    }
+                  ]
+                },
+                {
+                  "var": "maxPageCount"
+                }
+              ]
+            },
+            [
+              {
+                "torecord": [
+                  "pageCount",
+                  {
+                    "count": [
+                      {
+                        "part": "Pages"
+                      }
+                    ]
+                  },
+                  "maxAllowed",
+                  {
+                    "var": "maxPageCount"
+                  }
+                ]
+              }
+            ],
+            []
+          ]
+        },
+        {
+          "maxPageCount": 15
+        },
+        []
+      ]
+    }
+  ]
+}
